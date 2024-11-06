@@ -1,7 +1,11 @@
 import express from "express";
-import { registerController } from "../controllers/authController.js";
-import { loginController } from "../controllers/authController.js";
+import {
+  registerController,
+  loginController,
+  testController,
+} from "../controllers/authController.js";
 
+import { requireSignIn } from "../middlewares/authMiddleware.js";
 //routing objects
 const router = express.Router();
 
@@ -13,3 +17,6 @@ router.post("/register", registerController);
 router.post("/login", loginController);
 
 export default router;
+
+//testing route
+router.get("/test", requireSignIn, testController);

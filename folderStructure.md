@@ -7,7 +7,8 @@
 │   └── authController.js
 ├── helpers/
 │   └── authHelper.js
-├── middlewares/  (empty)
+├── middlewares/
+│   └── authMiddleware.js.js
 ├── models/
 │   └── userModel.js
 ├── routes/

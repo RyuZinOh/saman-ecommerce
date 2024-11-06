@@ -1,6 +1,6 @@
 import bcrypt, { compare } from "bcrypt";
 import userModel from "../models/userModel.js";
-import { hashPassword , comparePassword} from "../helpers/authHelper.js";
+import { hashPassword, comparePassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 export const registerController = async (req, res) => {
   try {
@@ -85,7 +85,7 @@ export const loginController = async (req, res) => {
     }
 
     // Check if user exists
-    const user = await userModel.findOne({ email }); 
+    const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(404).send({
         success: false,
@@ -96,7 +96,7 @@ export const loginController = async (req, res) => {
     // Check if password matches
     const match = await comparePassword(password, user.password);
     if (!match) {
-      return res.status(400).send({ 
+      return res.status(400).send({
         success: false,
         message: "Invalid password",
       });
@@ -104,7 +104,7 @@ export const loginController = async (req, res) => {
 
     // Generate token
     const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d", 
+      expiresIn: "7d",
     });
 
     // Send response with user info and token
@@ -124,7 +124,12 @@ export const loginController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error during login",
-      error: error.message, 
+      error: error.message,
     });
   }
+};
+
+//test controller
+export const testController = (req, res) => {
+  res.send("hi");
 };
