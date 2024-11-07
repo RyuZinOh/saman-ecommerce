@@ -47,3 +47,13 @@ footer */
   color: #ffefba;
   border-bottom: 1px solid #ffefba;
 }
+
+/* 
+registration */
+.register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  flex-direction: column;
+}
