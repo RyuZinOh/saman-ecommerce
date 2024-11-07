@@ -37,33 +37,36 @@ export const registerController = async (req, res) => {
         message: "Address is required",
       });
     }
+
+    // Check if the user already exists
     const existingUser = await userModel.findOne({ email });
-    //check user
     if (existingUser) {
-      res.status(200).send({
+      return res.status(200).send({
         success: true,
-        message: "User registered successfully",
+        message: "User is already registered",
       });
     }
+
     // Hash the password
     const hashedPassword = await hashPassword(password);
 
     // Create and save the user
-    const user = new userModel({
+    const user = await new userModel({
       name,
       email,
       phone,
       address,
       password: hashedPassword,
     }).save();
-    res.status(201).send({
-      sucess: true,
-      message: "sucesssful registration",
+
+    return res.status(201).send({
+      success: true,
+      message: "Successful registration",
       user,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Error in registration",
       error,
