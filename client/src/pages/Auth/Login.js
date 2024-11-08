@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Layout from "../../components/Layout/Layout";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useAuth } from "../../context/auth"; // Ensure correct import
+import { useAuth } from "../../context/auth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,9 +13,9 @@ const Login = () => {
   });
   const { email, password } = formData;
 
-  const { setAuth } = useAuth(); // Access setAuth from useAuth hook
-
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -41,15 +41,13 @@ const Login = () => {
       if (data.success) {
         toast.success(data.message, { duration: 4000 });
 
-        // Save the user data and token to the global auth state
         setAuth({
-          user: data.user, // Assuming the response has user data
-          token: data.token, // Assuming the response has a token
+          user: data.user,
+          token: data.token,
         });
-        localStorage.setItem("auth", JSON.stringify(data)); // Fix typo here
+        localStorage.setItem("auth", JSON.stringify(data));
 
-        // Navigate to home or another protected page
-        navigate("/");
+        navigate(location.state || "/");
       } else {
         toast.error(data.message);
       }
@@ -66,7 +64,7 @@ const Login = () => {
       author="My Website Team"
       keywords="login, user account"
     >
-      <div className="login d-flex justify-content-center align-items-center min-vh-100 bg-white">
+      <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from "react";
-
+import axios from "axios";
 // Create the AuthContext
 const AuthContext = createContext();
 
@@ -10,6 +10,9 @@ const AuthProvider = ({ children }) => {
     token: "",
   });
 
+  //default axios
+  axios.defaults.headers.common["Authorization"] = auth?.token;
+
   useEffect(() => {
     const data = localStorage.getItem("auth");
     if (data) {
@@ -19,7 +22,8 @@ const AuthProvider = ({ children }) => {
         token: parsedData.token,
       });
     }
-  }, [auth]);
+    //eslint-disable
+  }, []);
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
