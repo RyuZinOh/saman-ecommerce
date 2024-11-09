@@ -4,16 +4,16 @@ import { MdShoppingCart } from "react-icons/md";
 import { useAuth } from "../../context/auth";
 
 const Header = () => {
-  const { auth, setAuth } = useAuth();  // Correct destructuring
-  const navigate = useNavigate();  // For navigation after logout
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setAuth({
       user: null,
       token: "",
     });
-    localStorage.removeItem("auth"); // Clear auth data from localStorage
-    navigate("/login"); // Redirect to login page after logout
+    localStorage.removeItem("auth");
+    navigate("/login");
   };
 
   return (
@@ -32,7 +32,7 @@ const Header = () => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <Link to="/" className="navbar-brand ">
+            <Link to="/" className="navbar-brand">
               <MdShoppingCart /> Saman Ecommerce
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -61,14 +61,37 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <li className="nav-item">
-                    <button onClick={handleLogout} className="nav-link btn">
-                      Logout
+                  <li className="nav-item dropdown">
+                    <button
+                      className="nav-link dropdown-toggle"
+                      id="navbarDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {auth?.user?.name}
                     </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="navbarDropdown"
+                    >
+                      <li>
+                        <NavLink to="/dashboard" className="dropdown-item">
+                          Dashboard
+                        </NavLink>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="dropdown-item"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
                   </li>
                   <li className="nav-item">
                     <NavLink to="/cart" className="nav-link">
-                      Cart (0) {/* Update this dynamically based on cart items */}
+                      Cart (0)
                     </NavLink>
                   </li>
                 </>

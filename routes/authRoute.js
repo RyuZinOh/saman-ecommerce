@@ -3,6 +3,7 @@ import {
   registerController,
   loginController,
   testController,
+  forgetPassController
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -15,6 +16,8 @@ router.post("/register", registerController);
 // Login [POST]
 router.post("/login", loginController);
 
+// forget password
+router.post('/forget_password', forgetPassController)
 // Testing route
 router.get("/test", requireSignIn, isAdmin, testController);
 

@@ -4,59 +4,59 @@ import { hashPassword, comparePassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
 export const registerController = async (req, res) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, address, fpassA } = req.body;
 
     // Validation
     if (!name) {
-      return res.status(400).send({
-        success: false,
-        message: "Name is required",
-      });
+      return res
+        .status(400)
+        .send({ success: false, message: "Name is required" });
     }
     if (!email) {
-      return res.status(400).send({
-        success: false,
-        message: "Email is required",
-      });
+      return res
+        .status(400)
+        .send({ success: false, message: "Email is required" });
     }
     if (!password) {
-      return res.status(400).send({
-        success: false,
-        message: "Password is required",
-      });
+      return res
+        .status(400)
+        .send({ success: false, message: "Password is required" });
     }
     if (!phone) {
-      return res.status(400).send({
-        success: false,
-        message: "Phone number is required",
-      });
+      return res
+        .status(400)
+        .send({ success: false, message: "Phone number is required" });
     }
     if (!address) {
-      return res.status(400).send({
-        success: false,
-        message: "Address is required",
-      });
+      return res
+        .status(400)
+        .send({ success: false, message: "Address is required" });
+    }
+    if (!fpassA) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Security answer is required" });
     }
 
-    // Check if the user already exists
+    // Check if user already exists
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.status(200).send({
-        success: true,
-        message: "User is already registered",
-      });
+      return res
+        .status(200)
+        .send({ success: true, message: "User is already registered" });
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create and save the user
+    // Create and save user
     const user = await new userModel({
       name,
       email,
       phone,
       address,
       password: hashedPassword,
+      fpassA, 
     }).save();
 
     return res.status(201).send({
@@ -66,11 +66,9 @@ export const registerController = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).send({
-      success: false,
-      message: "Error in registration",
-      error,
-    });
+    return res
+      .status(500)
+      .send({ success: false, message: "Error in registration", error });
   }
 };
 
@@ -128,6 +126,43 @@ export const loginController = async (req, res) => {
       success: false,
       message: "Error during login",
       error: error.message,
+    });
+  }
+};
+//forgetPassController
+export const forgetPassController = async (req, res) => {
+  try {
+    const { email, fpassA, newPassword } = req.body;
+    if (!email) {
+      res.status(400).send({ message: "email reuqired" });
+    }
+    if (!fpassA) {
+      res.status(400).send({ message: "answer is reuqired" });
+    }
+    if (!newPassword) {
+      res.status(400).send({ message: "new password needed" });
+    }
+    //cheking
+    const user = await userModel.findOne({ email, fpassA });
+    //validation
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "wrong emial or answer",
+      });
+    }
+    const hashed = await hashPassword(newPassword);
+    await userModel.findByIdAndUpdate(user._id, { password: hashed });
+    res.status(200).send({
+      success: true,
+      message: "password resetted",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "something wrong",
+      error,
     });
   }
 };

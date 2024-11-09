@@ -1,21 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Layout from "../../components/Layout/Layout";
-import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useAuth } from "../../context/auth";
+import { FaEnvelope, FaQuestion } from "react-icons/fa";
 
-const Login = () => {
+const ForgetPassword = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    fpassA: "",
+    newPassword: "",
   });
-  const { email, password } = formData;
-
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { email, fpassA, newPassword } = formData;
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,26 +23,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email || !fpassA || !newPassword) {
       return toast.error("Please fill in all fields");
     }
 
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/auth/login`,
+        `${process.env.REACT_APP_API_URL}/api/v1/auth/forget_password`,
         formData
       );
 
       if (data.success) {
-        toast.success(data.message, { duration: 4000 });
-
-        setAuth({
-          user: data.user,
-          token: data.token,
-        });
-        localStorage.setItem("auth", JSON.stringify(data));
-
-        navigate(location.state || "/");
+        toast.success("Password reset successful. Please log in.");
       } else {
         toast.error(data.message);
       }
@@ -59,16 +46,14 @@ const Login = () => {
 
   return (
     <Layout
-      title="Login - My Website"
-      description="Log in to access your account on My Website."
-      author="My Website Team"
-      keywords="login, user account"
+      title="Forgot Password - My Website"
+      description="Reset your password for My Website."
     >
       <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">
-              <h1 className="text-center mb-4">Login</h1>
+              <h1 className="text-center mb-4">Forgot Password</h1>
               <form
                 onSubmit={handleSubmit}
                 className="p-4 shadow-lg"
@@ -79,10 +64,7 @@ const Login = () => {
                 }}
               >
                 <div className="mb-3">
-                  <label
-                    htmlFor="email"
-                    className="form-label d-flex align-items-center"
-                  >
+                  <label htmlFor="email" className="form-label">
                     <FaEnvelope className="me-2 text-dark" />
                     Email
                   </label>
@@ -100,20 +82,34 @@ const Login = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label
-                    htmlFor="password"
-                    className="form-label d-flex align-items-center"
-                  >
-                    <FaLock className="me-2 text-dark" />
-                    Password
+                  <label htmlFor="fpassA" className="form-label">
+                    <FaQuestion className="me-2 text-dark" />
+                    Security Answer
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="fpassA"
+                    value={fpassA}
+                    onChange={handleChange}
+                    placeholder="Who is your favorite waifu in anime?"
+                    style={{
+                      borderRadius: "8px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="newPassword" className="form-label">
+                    New Password
                   </label>
                   <input
                     type="password"
                     className="form-control"
-                    id="password"
-                    value={password}
+                    id="newPassword"
+                    value={newPassword}
                     onChange={handleChange}
-                    placeholder="Enter your password"
+                    placeholder="Enter your new password"
                     style={{
                       borderRadius: "8px",
                       border: "1px solid #ddd",
@@ -131,22 +127,9 @@ const Login = () => {
                     transition: "background-color 0.3s, color 0.3s",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                   }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = "black";
-                    e.currentTarget.style.color = "white";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
-                    e.currentTarget.style.color = "black";
-                  }}
                 >
-                  Login
+                  Reset Password
                 </button>
-                <div className="text-center mt-3">
-                  <Link to="/forget-password" className="text-primary">
-                    Forgot Password?
-                  </Link>
-                </div>
               </form>
             </div>
           </div>
@@ -156,4 +139,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

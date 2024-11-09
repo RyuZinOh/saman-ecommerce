@@ -9,6 +9,7 @@ import {
   FaLock,
   FaPhone,
   FaMapMarkerAlt,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 const Register = () => {
@@ -18,8 +19,9 @@ const Register = () => {
     password: "",
     phone: "",
     address: "",
+    fpassA: "",
   });
-  const { name, email, password, phone, address } = formData;
+  const { name, email, password, phone, address, fpassA } = formData;
 
   const navigate = useNavigate();
 
@@ -34,8 +36,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password || !phone || !address) {
-      return toast.error("Please fill in all fields");
+    if (!name || !email || !password || !phone || !address || !fpassA) {
+      return toast.error(
+        "Please fill in all fields, including the security answer."
+      );
     }
 
     try {
@@ -47,7 +51,6 @@ const Register = () => {
       if (data.success) {
         navigate("/login");
         toast.success(data.message, { duration: 4000 });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
       } else {
         toast.error(data.message);
       }
@@ -63,6 +66,7 @@ const Register = () => {
     password: <FaLock className="me-2 text-dark" />,
     phone: <FaPhone className="me-2 text-dark" />,
     address: <FaMapMarkerAlt className="me-2 text-dark" />,
+    fpassA: <FaQuestionCircle className="me-2 text-dark" />,
   };
 
   return (
@@ -86,31 +90,40 @@ const Register = () => {
                   boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                {["name", "email", "password", "phone", "address"].map(
-                  (field) => (
-                    <div className="mb-3" key={field}>
-                      <label
-                        htmlFor={field}
-                        className="form-label d-flex align-items-center"
-                      >
-                        {iconMapping[field]}
-                        {field.charAt(0).toUpperCase() + field.slice(1)}
-                      </label>
-                      <input
-                        type={field === "password" ? "password" : "text"}
-                        className="form-control"
-                        id={field}
-                        value={formData[field]}
-                        onChange={handleChange}
-                        placeholder={`Enter your ${field}`}
-                        style={{
-                          borderRadius: "8px",
-                          border: "1px solid #ddd",
-                        }}
-                      />
-                    </div>
-                  )
-                )}
+                {[
+                  "name",
+                  "email",
+                  "password",
+                  "phone",
+                  "address",
+                  "fpassA",
+                ].map((field) => (
+                  <div className="mb-3" key={field}>
+                    <label
+                      htmlFor={field}
+                      className="form-label d-flex align-items-center"
+                    >
+                      {iconMapping[field]}
+                      {field === "fpassA"
+                        ? "Who is your favorite waifu in anime?"
+                        : field.charAt(0).toUpperCase() + field.slice(1)}
+                    </label>
+                    <input
+                      type={field === "password" ? "password" : "text"}
+                      className="form-control"
+                      id={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      placeholder={`Enter your ${
+                        field === "fpassA" ? "answer to the question" : field
+                      }`}
+                      style={{
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                  </div>
+                ))}
                 <button
                   type="submit"
                   className="btn w-100 mt-3 shadow"
