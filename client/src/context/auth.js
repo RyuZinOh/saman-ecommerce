@@ -1,18 +1,16 @@
 import { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
-// Create the AuthContext
+
 const AuthContext = createContext();
 
-// AuthProvider component that provides context value to its children
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     user: null,
     token: "",
   });
+  const [loading, setLoading] = useState(true);
 
-  //default axios
-  axios.defaults.headers.common["Authorization"] = auth?.token;
-
+  // default axios configuration
   useEffect(() => {
     const data = localStorage.getItem("auth");
     if (data) {
@@ -22,8 +20,20 @@ const AuthProvider = ({ children }) => {
         token: parsedData.token,
       });
     }
-    //eslint-disable
-  }, []);
+    setLoading(false); 
+  }, []); 
+
+  // Set Axios Authorization header after data is available
+  useEffect(() => {
+    if (auth.token) {
+      axios.defaults.headers.common["Authorization"] = auth.token;
+    }
+  }, [auth.token]);
+
+  if (loading) {
+    return null; 
+  }
+
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
@@ -31,7 +41,6 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to access authentication context
 const useAuth = () => useContext(AuthContext);
 
-export { AuthProvider, useAuth };
+export { useAuth, AuthProvider };

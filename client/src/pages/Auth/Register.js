@@ -43,9 +43,10 @@ const Register = () => {
     }
 
     try {
+      const dataToSend = { ...formData, role: "0" }; //default setting all other user except me as 0, me is 1 = admin
       const { data } = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/v1/auth/register`,
-        formData
+        dataToSend
       );
 
       if (data.success) {
