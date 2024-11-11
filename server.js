@@ -5,6 +5,7 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authoRoutes from "./routes/authRoute.js";
 import cors from "cors";
+import categoryRoutes from "./routes/categoryRoutes.js"
 
 //env
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 app.use(cors());
 // Route
 app.use("/api/v1/auth", authoRoutes);
+app.use("/api/v1/category", categoryRoutes)
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to Saman</h1>");
 });
