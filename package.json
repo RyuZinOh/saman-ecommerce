@@ -26,5 +26,9 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7",
     "slugify": "^1.6.6"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9"
   }
 }
