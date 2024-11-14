@@ -13,22 +13,16 @@ const Layout = ({
   viewport,
 }) => {
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Helmet>
         <title>{title || "Default Title"}</title>
-        <meta
-          name="description"
-          content={description || "Default description"}
-        />
+        <meta name="description" content={description || "Default description"} />
         <meta name="author" content={author || "Default Author"} />
         <meta name="keywords" content={keywords || "Default, Keywords"} />
-        <meta
-          name="viewport"
-          content={viewport || "width=device-width, initial-scale=1.0"}
-        />
+        <meta name="viewport" content={viewport || "width=device-width, initial-scale=1.0"} />
       </Helmet>
       <Header />
-      <main style={{ minHeight: "76vh" }}>
+      <main style={{ flex: 1 }}>
         <Toaster />
         {children}
       </main>

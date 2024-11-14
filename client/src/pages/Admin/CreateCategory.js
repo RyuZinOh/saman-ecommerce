@@ -13,15 +13,12 @@ const CreateCategory = () => {
   const [selected, setSelected] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
-  // Fetch all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/v1/category/get-category`
       );
-      if (data.success) {
-        setCategories(data.category);
-      }
+      if (data.success) setCategories(data.category);
     } catch (error) {
       console.error(error);
       toast.error("Error retrieving categories");
@@ -32,7 +29,6 @@ const CreateCategory = () => {
     getAllCategory();
   }, []);
 
-  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -48,11 +44,10 @@ const CreateCategory = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("error creation of  driven data ");
+      toast.error("error creation of driven data");
     }
   };
 
-  // Update category
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -70,24 +65,23 @@ const CreateCategory = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("upateing error");
+      toast.error("updating error");
     }
   };
 
-  // Delete category
   const handleDelete = async (pId) => {
     try {
       const { data } = await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/v1/category/delete-category/${pId}`
       );
       if (data.success) {
-        toast.success(`${name} is deleted`);
+        toast.success(`$deleted`);
         getAllCategory();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("deletion is fsiled somehow");
+      toast.error("deletion failed");
     }
   };
 
@@ -126,7 +120,7 @@ const CreateCategory = () => {
                       <td>{c.name}</td>
                       <td>
                         <button
-                          className="btn btn-primary ms-2"
+                          className="category-button-custom category-button-custom-edit ms-2"
                           onClick={() => {
                             setIsModalOpen(true);
                             setUpdatedName(c.name);
@@ -136,7 +130,7 @@ const CreateCategory = () => {
                           Edit
                         </button>
                         <button
-                          className="btn btn-danger ms-2"
+                          className="category-button-custom category-button-custom-delete ms-2"
                           onClick={() => handleDelete(c._id)}
                         >
                           Delete

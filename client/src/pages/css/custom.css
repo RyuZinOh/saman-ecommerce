@@ -1,0 +1,77 @@
+/* Button style */
+.btn-custom {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  padding: 12px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* Button hover effect */
+.btn-custom:hover {
+  background-color: white;
+  color: black;
+  transform: scale(1.05); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+}
+
+/* Disabled button style */
+.btn-custom:disabled {
+  background-color: grey;
+  color: white;
+  cursor: not-allowed;
+  border: 2px solid grey;
+}
+
+.category-button-custom {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-button-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-button-custom:active {
+  transform: translateY(0);
+}
+
+.category-button-custom:focus {
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(52, 152, 219, 0.7);
+}
+
+.category-button-custom-edit {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #ffffff;
+}
+
+.category-button-custom-edit:hover {
+  background-color: #000000;
+  color: white;
+  border-color: #2980b9;
+}
+
+.category-button-custom-delete {
+  background-color: #d7200b;
+  color: white;
+  border: 2px solid #e74c3c;
+}
+
+.category-button-custom-delete:hover {
+  background-color: white;
+  color: black;
+  border-color: white;
+}
