@@ -1,4 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;400;700&family=Poppins:wght@400;600;700&display=swap");
+
+:root {
+  --primary-bg: linear-gradient(135deg, #333, #000);
+  --navbar-height: 100px;
+  --footer-padding: 25px;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.45rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 3rem;
+  --font-color: white;
+  --hover-color: #ffefba;
+  --shadow-color: rgb(255, 255, 255);
+}
 
 * {
   margin: 0;
@@ -6,7 +19,8 @@
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
@@ -18,26 +32,78 @@ body, html {
 }
 
 .navbar {
-  font-size: 17px;
-  line-height: 26px;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
   text-transform: uppercase;
   box-shadow: 0 8px 6px -6px grey;
-  border-bottom: solid gray !important;
+  border-bottom: solid gray;
+  height: var(--navbar-height);
+  background: var(--primary-bg);
 }
 
 .nav-link {
   font-family: "Kanit", sans-serif;
-  font-weight: 300 !important;
+  font-size: var(--font-size-lg);
+  color: var(--font-color);
+  text-transform: capitalize;
+  transition: color 0.3s ease;
 }
 
-.active {
-  border-bottom: 2px solid black;
+.nav-link:hover{
+  color: var(--hover-color);
+  
+}
+.nav-link.active {
+  color: white !important;
+  border-bottom: 2px solid rgb(255, 255, 255);
 }
 
 .navbar-brand {
   font-family: "Poppins", sans-serif;
-  font-weight: bold;
   letter-spacing: 3px;
+  font-size: var(--font-size-xxl);
+  color: var(--font-color);
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: var(--hover-color);
+}
+
+.navbar-nav .dropdown-toggle {
+  color: var(--font-color) !important;
+  background: transparent;
+  border: none;
+  font-size: var(--font-size-lg);
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .dropdown-toggle:focus,
+.navbar-nav .dropdown-toggle:active {
+  color: var(--font-color) !important;
+  outline: none;
+}
+
+.navbar-nav .dropdown-menu {
+  background: var(--primary-bg);
+  border: none;
+}
+
+.navbar-nav .dropdown-item {
+  color: var(--font-color);
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .dropdown-item:hover {
+  color: var(--hover-color);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-nav .dropdown-item:active {
+  color: white;
 }
 
 .main-content {
@@ -45,22 +111,22 @@ body, html {
 }
 
 .footer {
-  color: white;
-  padding: 25px;
-  background: linear-gradient(135deg, #333, #000);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  color: var(--font-color);
+  padding: var(--footer-padding);
+  background: var(--primary-bg);
+  box-shadow: 0px 4px 8px var(--shadow-color);
   width: 100%;
 }
 
 .footer a {
   text-decoration: none;
-  color: white;
+  color: var(--font-color);
   padding: 10px;
 }
 
 .footer a:hover {
-  color: #ffefba;
-  border-bottom: 1px solid #ffefba;
+  color: var(--hover-color);
+  border-bottom: 1px solid var(--hover-color);
 }
 
 .register {
