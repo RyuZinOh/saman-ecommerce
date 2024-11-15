@@ -34,5 +34,5 @@ router.get("/product-photo/:pidP", sniper);
 router.delete("/product-delete/:pidP", requireSignIn, isAdmin, pdeleter);
 
 //u[dtaing
-router.post("/update-product/:pidP", requireSignIn, isAdmin, formidable(), updateSki);
+router.put("/update-product/:pidP", requireSignIn, isAdmin, formidable(), updateSki);
 export default router;

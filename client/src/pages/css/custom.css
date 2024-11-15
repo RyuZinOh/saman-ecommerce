@@ -15,8 +15,8 @@
 .btn-custom:hover {
   background-color: white;
   color: black;
-  transform: scale(1.05); 
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Disabled button style */
@@ -74,4 +74,50 @@
   background-color: white;
   color: black;
   border-color: white;
+}
+
+.fixed-admin-menu {
+  width: 250px;
+  position: fixed; /* Keeps it fixed on the page */
+  top: 450px; /* Adjust this value to move it down */
+  left: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.list-group-item {
+  background-color: transparent;
+  border: none;
+  font-size: 1.25rem;
+  padding: 12px 16px;
+  color: #333333;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+  color: #000000;
+  border-radius: 8px;
+}
+
+.custom-button {
+  text-decoration: none;
+  color: inherit;
+}
+
+.custom-button.active {
+  font-weight: bold;
+  color: #000000;
+  background-color: #e9ecef;
+  border-radius: 8px;
 }

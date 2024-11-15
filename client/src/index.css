@@ -49,9 +49,8 @@ html {
   transition: color 0.3s ease;
 }
 
-.nav-link:hover{
+.nav-link:hover {
   color: var(--hover-color);
-  
 }
 .nav-link.active {
   color: white !important;
@@ -135,4 +134,86 @@ html {
   justify-content: center;
   height: 70vh;
   flex-direction: column;
+}
+
+/* Layout */
+.goku-row {
+  margin: 0;
+  padding: 0;
+}
+
+.naruto-menu {
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+.luffy-content {
+  background-color: #ffffff;
+  padding: 2rem;
+}
+
+.ichigo-header {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+/* Cards */
+.zoro-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.tanjiro-product-link {
+  text-decoration: none !important;
+  color: black !important;
+}
+
+.saitama-card {
+  width: 18rem;
+  height: 24rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.saitama-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Image */
+.gojo-img {
+  height: 16rem;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.saitama-card:hover .gojo-img {
+  transform: scale(1.1);
+}
+
+/* Card Body */
+.levi-body {
+  padding: 0.5rem;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.eren-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.mikasa-text {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: auto;
 }

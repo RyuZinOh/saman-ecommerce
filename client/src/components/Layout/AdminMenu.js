@@ -3,28 +3,34 @@ import { NavLink } from "react-router-dom";
 
 const AdminMenu = () => {
   return (
-    <div className="container py-4">
-      <div className="card shadow-lg rounded">
-        <div className="card-body text-center">
-          <h4 className="card-title mb-4">Admin Panel</h4>
-          <div className="list-group">
+    <div className="fixed-admin-menu">
+      <div className="card shadow-lg rounded-lg border-0">
+        <div className="card-body">
+          <h4 className="card-title text-center text-dark mb-4">Admin Panel</h4>
+          <div className="list-group list-group-flush">
             <NavLink
               to="/dashboard/admin/create-category"
-              className="list-group-item list-group-item-action py-3 px-4 rounded mb-2 hover-shadow"
+              className="list-group-item custom-button d-flex align-items-center"
             >
-              Create Category
+              <span>Create Category</span>
             </NavLink>
             <NavLink
               to="/dashboard/admin/create-product"
-              className="list-group-item list-group-item-action py-3 px-4 rounded mb-2 hover-shadow"
+              className="list-group-item custom-button d-flex align-items-center"
             >
-              Create Product
+              <span>Create Product</span>
+            </NavLink>
+            <NavLink
+              to="/dashboard/admin/products"
+              className="list-group-item custom-button d-flex align-items-center"
+            >
+              <span>Products</span>
             </NavLink>
             <NavLink
               to="/dashboard/admin/users"
-              className="list-group-item list-group-item-action py-3 px-4 rounded mb-2 hover-shadow"
+              className="list-group-item custom-button d-flex align-items-center"
             >
-              Users
+              <span>Users</span>
             </NavLink>
           </div>
         </div>
