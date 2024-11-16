@@ -4,9 +4,12 @@ import Layout from "../../components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { Pagination } from "antd";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(6);
 
   const getAllProducts = async () => {
     try {
@@ -20,9 +23,21 @@ const Products = () => {
     }
   };
 
+  const paginate = (products) => {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return products.slice(start, end);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
     getAllProducts();
   }, []);
+
+  const paginatedProducts = paginate(products);
 
   return (
     <Layout>
@@ -33,25 +48,39 @@ const Products = () => {
         <div className="col-md-9 luffy-content">
           <h1 className="text-center ichigo-header">All Products List</h1>
           <div className="d-flex flex-wrap justify-content-center zoro-card-container">
-            {products?.map((p) => (
-              <Link
-                key={p._id}
-                to={`/dashboard/admin/product/${p.slug}`}
-                className="tanjiro-product-link"
-              >
-                <div className="card m-3 saitama-card">
-                  <img
-                    src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${p._id}`}
-                    className="card-img-top gojo-img"
-                    alt={p.name}
-                  />
-                  <div className="card-body levi-body">
-                    <h5 className="card-title eren-title">{p.name}</h5>
-                    <p className="card-text mikasa-text">{p.description}</p>
+            {paginatedProducts.length > 0 ? (
+              paginatedProducts.map((p) => (
+                <Link
+                  key={p._id}
+                  to={`/dashboard/admin/product/${p.slug}`}
+                  className="tanjiro-product-link"
+                >
+                  <div className="card m-3 saitama-card">
+                    <img
+                      src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${p._id}`}
+                      className="card-img-top gojo-img"
+                      alt={p.name}
+                    />
+                    <div className="card-body levi-body">
+                      <h5 className="card-title eren-title">{p.name}</h5>
+                      <p className="card-text mikasa-text">{p.description}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <div className="text-center">
+                <h4>No products available.</h4>
+              </div>
+            )}
+          </div>
+          <div className="d-flex justify-content-center mt-4">
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={products.length}
+              onChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
