@@ -2,10 +2,12 @@ import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdShoppingCart } from "react-icons/md";
 import { useAuth } from "../../context/auth";
+import useCategory from "../../hooks/useCategory";
 
 const Header = () => {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
+  const { categories } = useCategory(); 
 
   const handleLogout = () => {
     setAuth({
@@ -41,10 +43,31 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink to="/category" className="nav-link">
-                  Category
-                </NavLink>
+              {/* Dropdown for Categories */}
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle"
+                  id="categoriesDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Categories
+                </button>
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="categoriesDropdown"
+                >
+                  {categories?.map((category) => (
+                    <li key={category.id}>
+                      <Link
+                        to={`/category/${category.slug}`}
+                        className="dropdown-item"
+                      >
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
               {!auth.user ? (
                 <>

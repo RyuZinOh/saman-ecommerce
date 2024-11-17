@@ -1,6 +1,7 @@
 import productModel from "../models/productModel.js";
 import fs from "fs";
 import slugify from "slugify";
+import categoryModels from "../models/categoryModels.js";
 
 // Validation helper
 const validateProductFields = (fields, photo) => {
@@ -161,6 +162,27 @@ export const updateSki = async (req, res) => {
       success: false,
       message: "Error updating product",
       error,
+    });
+  }
+};
+
+//catrgoryfilterdropdown
+
+export const pCg = async (req, res) => {
+  try {
+    const category = await categoryModels.findOne({ slug: req.params.slug });
+    const products = await productModel.find({ category }).populate("category");
+    res.status(200).send({
+      success: true,
+      category,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      error,
+      message: "Error While Getting products",
     });
   }
 };

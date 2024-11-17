@@ -7,6 +7,7 @@ import {
   sniper,
   pdeleter,
   updateSki,
+  pCg,
 } from "../controllers/productcontroller.js";
 import formidable from "express-formidable";
 const router = express.Router();
@@ -34,5 +35,15 @@ router.get("/product-photo/:pidP", sniper);
 router.delete("/product-delete/:pidP", requireSignIn, isAdmin, pdeleter);
 
 //u[dtaing
-router.put("/update-product/:pidP", requireSignIn, isAdmin, formidable(), updateSki);
+router.put(
+  "/update-product/:pidP",
+  requireSignIn,
+  isAdmin,
+  formidable(),
+  updateSki
+);
+
+//category prodcut
+router.get("/product-category/:slug", pCg);
+
 export default router;

@@ -217,3 +217,76 @@ html {
   color: #666;
   margin-top: auto;
 }
+
+/* Hover effect for cards */
+.hover-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-img-top {
+  transition: transform 0.3s ease;
+}
+
+.hover-card:hover .card-img-top {
+  transform: scale(1.1);
+}
+
+/* product details page */
+.product-image img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.product-info h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.product-info p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body img {
+  border-radius: 10px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.card-text {
+  font-size: 0.9rem;
+}
+
+.btn-primary,
+.btn-outline-primary {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-outline-primary:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.related-products h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}

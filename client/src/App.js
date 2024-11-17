@@ -17,18 +17,26 @@ import Orders from "./pages/user/Orders";
 import Profile from "./pages/user/Profile";
 import CreateCategory from "./pages/Admin/CreateCategory";
 import Products from "./pages/Admin/Product";
-import UpdateProduct from "./pages/Admin/UpdateProduct"
+import UpdateProduct from "./pages/Admin/UpdateProduct";
+import Categories from "./pages/Categories";
+import CategoryProduct from "./pages/CategoryProduct";
+import ProductDetails from "./pages/ProductDetails";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/product/:slug" element={<ProductDetails />} />
+      <Route path="/categories" element={<Categories />} />
+      <Route path="/category/:slug" element={<CategoryProduct />} />
       {/* Nested Private Route */}
+      {/* users */}
       <Route path="/" element={<HomePage />} />
       <Route path="/dashboard" element={<PrivateRoute />}>
         <Route path="user" element={<Dashboard />} />
         <Route path="user/orders" element={<Orders />} />
         <Route path="user/profile" element={<Profile />} />
       </Route>
+      {/* admin */}
       <Route path="/dashboard" element={<AdminDat />}>
         <Route path="admin" element={<AdminDashboard />} />
         <Route path="admin/create-category" element={<CreateCategory />} />
