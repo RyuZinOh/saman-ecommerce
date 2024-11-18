@@ -86,7 +86,7 @@ const CategoryProduct = () => {
                               : p.description}
                           </p>
                           <p className="card-text font-weight-bold">
-                            $ {p.price}
+                            ₹ {p.price}
                           </p>
                           <div className="d-flex justify-content-between">
                             <button

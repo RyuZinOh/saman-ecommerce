@@ -124,7 +124,7 @@ const ProductDetails = () => {
                       <p className="card-text">
                         {p.description.substring(0, 30)}...
                       </p>
-                      <p className="card-text">${p.price}</p>
+                      <p className="card-text">₹{p.price}</p>
                       <button
                         className="btn btn-outline-primary btn-sm w-100"
                         onClick={() => navigate(`/product/${p.slug}`)}

@@ -7,9 +7,10 @@ import { Checkbox, Slider, Input, Button, Pagination, Spin } from "antd";
 import { SearchOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
-
+import { useAuth } from "../context/auth";
 const HomePage = () => {
   const { cart, setCart } = useCart();
+  const { auth } = useAuth();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -174,7 +175,18 @@ const HomePage = () => {
                           type="secondary"
                           size="small"
                           onClick={() => {
-                            setCart([...cart, product]);
+                            if (!auth?.token) {
+                              toast.error(
+                                "Please log in to add items to the cart."
+                              );
+                              return;
+                            }
+                            const updatedCart = [...cart, product];
+                            setCart(updatedCart);
+                            localStorage.setItem(
+                              "cart",
+                              JSON.stringify(updatedCart)
+                            ); 
                             toast.success("Added to cart successfully!");
                           }}
                         >

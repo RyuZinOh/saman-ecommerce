@@ -178,7 +178,7 @@ html {
   border: 1px solid #ddd;
   border-radius: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden; /* Ensure consistent appearance */
+  overflow: hidden;
 }
 
 .levi-body {
@@ -186,12 +186,12 @@ html {
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Ensure buttons are at the bottom */
+  justify-content: space-between;
   gap: 0.5rem;
 }
 
 .card-body button {
-  margin-top: auto; /* Push buttons to the bottom */
+  margin-top: auto;
 }
 
 .saitama-card:hover {
@@ -236,10 +236,13 @@ html {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card-img-top {
-  transition: transform 0.3s ease;
+card-img-top {
+  transition: transform 0.3s ease-in-out;
 }
 
+.card-img-top:hover {
+  transform: scale(1.1); 
+}
 .hover-card:hover .card-img-top {
   transform: scale(1.1);
 }
@@ -300,4 +303,13 @@ html {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 20px;
+}
+.zoom-img {
+  transition: transform 0.3s ease-in-out;
+  object-fit: cover;
+  height: 180px;
+}
+
+.zoom-img:hover {
+  transform: scale(1.2);
 }

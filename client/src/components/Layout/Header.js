@@ -4,6 +4,7 @@ import { MdShoppingCart } from "react-icons/md";
 import { useAuth } from "../../context/auth";
 import useCategory from "../../hooks/useCategory";
 import { useCart } from "../../context/cart";
+import { Badge } from "antd";
 
 const Header = () => {
   const { auth, setAuth } = useAuth();
@@ -120,9 +121,11 @@ const Header = () => {
                     </ul>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/cart" className="nav-link">
-                      {cart?.length}
-                    </NavLink>
+                    <Badge count={cart?.length} showZero>
+                      <NavLink to="/cart" className="nav-link">
+                        Cart
+                      </NavLink>
+                    </Badge>
                   </li>
                 </>
               )}
