@@ -21,12 +21,14 @@ import UpdateProduct from "./pages/Admin/UpdateProduct";
 import Categories from "./pages/Categories";
 import CategoryProduct from "./pages/CategoryProduct";
 import ProductDetails from "./pages/ProductDetails";
+import CartPage from "./pages/CartPage";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/product/:slug" element={<ProductDetails />} />
       <Route path="/categories" element={<Categories />} />
+      <Route path="/cart" element={<CartPage />} />
       <Route path="/category/:slug" element={<CategoryProduct />} />
       {/* Nested Private Route */}
       {/* users */}

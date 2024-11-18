@@ -173,14 +173,25 @@ html {
 
 .saitama-card {
   width: 18rem;
-  height: 24rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Ensure consistent appearance */
+}
+
+.levi-body {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure buttons are at the bottom */
+  gap: 0.5rem;
+}
+
+.card-body button {
+  margin-top: auto; /* Push buttons to the bottom */
 }
 
 .saitama-card:hover {
