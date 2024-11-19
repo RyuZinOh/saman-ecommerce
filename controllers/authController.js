@@ -160,3 +160,54 @@ export const forgetPassController = async (req, res) => {
 export const testController = (req, res) => {
   res.send("hi");
 };
+
+//updatingprofile
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, password, address, phone } = req.body;
+    const user = await userModel.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    let hashedPassword = user.password; 
+    if (password) {
+      if (password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: "Password must be at least 6 characters long",
+        });
+      }
+      hashedPassword = await hashPassword(password);
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user._id,
+      {
+        name: name || user.name,
+        email: email || user.email,
+        password: hashedPassword,
+        phone: phone || user.phone,
+        address: address || user.address,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error updating profile",
+      error: error.message,
+    });
+  }
+};

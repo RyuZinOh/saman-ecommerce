@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import CategoryForm from "../../components/Form/CategoryForm";
 import { Modal } from "antd";
+import { useAuth } from "../../context/auth";
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -13,10 +14,17 @@ const CreateCategory = () => {
   const [selected, setSelected] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
 
+  const { auth } = useAuth();
+
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/category/get-category`
+        `${process.env.REACT_APP_API_URL}/api/v1/category/get-category`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`, //token i header
+          },
+        }
       );
       if (data.success) setCategories(data.category);
     } catch (error) {
@@ -27,14 +35,19 @@ const CreateCategory = () => {
 
   useEffect(() => {
     getAllCategory();
-  }, []);
+  }, [auth?.token]); // Rerunning token if necesary
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/v1/category/create-category`,
-        { name }
+        { name },
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+          },
+        }
       );
       if (data?.success) {
         toast.success(`${name} is created`);
@@ -44,7 +57,7 @@ const CreateCategory = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("error creation of driven data");
+      toast.error("Error creating category");
     }
   };
 
@@ -53,7 +66,12 @@ const CreateCategory = () => {
     try {
       const { data } = await axios.put(
         `${process.env.REACT_APP_API_URL}/api/v1/category/update-category/${selected._id}`,
-        { name: updatedName }
+        { name: updatedName },
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+          },
+        }
       );
       if (data.success) {
         toast.success(`${updatedName} is updated`);
@@ -65,23 +83,28 @@ const CreateCategory = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("updating error");
+      toast.error("Error updating category");
     }
   };
 
   const handleDelete = async (pId) => {
     try {
       const { data } = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/v1/category/delete-category/${pId}`
+        `${process.env.REACT_APP_API_URL}/api/v1/category/delete-category/${pId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+          },
+        }
       );
       if (data.success) {
-        toast.success(`$deleted`);
+        toast.success("Category deleted");
         getAllCategory();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("deletion failed");
+      toast.error("Error deleting category");
     }
   };
 

@@ -5,12 +5,14 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Select, Spin, InputNumber } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth"; // Import the auth context
 
 import "../css/custom.css";
 const { Option } = Select;
 
 const CreateProduct = () => {
   const navigate = useNavigate();
+  const { auth } = useAuth(); // Access the token from the auth context
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productDetails, setProductDetails] = useState({
@@ -19,7 +21,7 @@ const CreateProduct = () => {
     price: "",
     category: "",
     quantity: "",
-    shipping: "0", 
+    shipping: "0",
     photo: null,
   });
 
@@ -73,7 +75,12 @@ const CreateProduct = () => {
 
       const { data } = await axios.post(
         `${apiUrl}/api/v1/product/create-product`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.token}`, // Add the token to the request header
+          },
+        }
       );
       if (data?.success) {
         toast.success("Product created successfully!");
@@ -101,7 +108,9 @@ const CreateProduct = () => {
               <h2 className="card-title mb-4">Create New Product</h2>
               <form className="form-container" onSubmit={handleCreate}>
                 <div className="mb-3">
-                  <label htmlFor="category" className="form-label">Category</label>
+                  <label htmlFor="category" className="form-label">
+                    Category
+                  </label>
                   {loading ? (
                     <Spin size="small" />
                   ) : (
@@ -120,7 +129,9 @@ const CreateProduct = () => {
                       className="form-select"
                     >
                       {categories.map((c) => (
-                        <Option key={c._id} value={c._id}>{c.name}</Option>
+                        <Option key={c._id} value={c._id}>
+                          {c.name}
+                        </Option>
                       ))}
                     </Select>
                   )}
@@ -128,7 +139,9 @@ const CreateProduct = () => {
 
                 <div className="mb-3">
                   <label className="btn btn-outline-secondary col-md-12 custom-file-upload">
-                    {productDetails.photo ? productDetails.photo.name : "Upload Photo"}
+                    {productDetails.photo
+                      ? productDetails.photo.name
+                      : "Upload Photo"}
                     <input
                       type="file"
                       name="photo"
@@ -144,14 +157,16 @@ const CreateProduct = () => {
                       src={URL.createObjectURL(productDetails.photo)}
                       alt="product_preview"
                       height="100px"
-                      width= "250px"
+                      width="250px"
                       className="img-fluid rounded"
                     />
                   </div>
                 )}
 
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Product Name</label>
+                  <label htmlFor="name" className="form-label">
+                    Product Name
+                  </label>
                   <input
                     id="name"
                     name="name"
@@ -164,7 +179,9 @@ const CreateProduct = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="description" className="form-label">Description</label>
+                  <label htmlFor="description" className="form-label">
+                    Description
+                  </label>
                   <textarea
                     id="description"
                     name="description"
@@ -177,7 +194,9 @@ const CreateProduct = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="price" className="form-label">Price</label>
+                  <label htmlFor="price" className="form-label">
+                    Price
+                  </label>
                   <InputNumber
                     id="price"
                     name="price"
@@ -192,7 +211,9 @@ const CreateProduct = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="quantity" className="form-label">Quantity</label>
+                  <label htmlFor="quantity" className="form-label">
+                    Quantity
+                  </label>
                   <InputNumber
                     id="quantity"
                     name="quantity"
@@ -208,7 +229,9 @@ const CreateProduct = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="shipping" className="form-label">Shipping</label>
+                  <label htmlFor="shipping" className="form-label">
+                    Shipping
+                  </label>
                   <Select
                     id="shipping"
                     bordered={false}

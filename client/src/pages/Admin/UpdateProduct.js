@@ -5,12 +5,14 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { Select } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/auth";
 
 const { Option } = Select;
 
 const UpdateProduct = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
+  const { auth } = useAuth();
 
   const [categories, setCategories] = useState([]);
   const [product, setProduct] = useState({
@@ -22,10 +24,12 @@ const UpdateProduct = () => {
     shipping: "",
     photo: "",
   });
+  const [loadingUpdate, setLoadingUpdate] = useState(false); // Separate loading for update
+  const [loadingDelete, setLoadingDelete] = useState(false); // Separate loading for delete
   const [id, setId] = useState("");
 
-  // Fetch single product details
   const getSingleProduct = useCallback(async () => {
+    setLoadingUpdate(true);
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/v1/product/get-product/${slug}`
@@ -43,11 +47,13 @@ const UpdateProduct = () => {
       setId(prod._id);
     } catch (error) {
       toast.error("Failed to fetch product details");
+    } finally {
+      setLoadingUpdate(false);
     }
   }, [slug]);
 
-  // Fetch all categories
   const getAllCategory = async () => {
+    setLoadingUpdate(true);
     try {
       const { data } = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/v1/category/get-category`
@@ -55,10 +61,24 @@ const UpdateProduct = () => {
       if (data?.success) setCategories(data?.category);
     } catch (error) {
       toast.error("Failed to fetch categories");
+    } finally {
+      setLoadingUpdate(false);
     }
   };
 
-  // Handle product update
+  useEffect(() => {
+    getSingleProduct();
+    getAllCategory();
+  }, [getSingleProduct]);
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setProduct((prev) => ({
+      ...prev,
+      [name]: type === "file" ? files[0] : value,
+    }));
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     const { name, description, price, quantity, category } = product;
@@ -68,15 +88,29 @@ const UpdateProduct = () => {
       return;
     }
 
+    const token = auth?.token;
+    if (!token) {
+      toast.error("You are not authenticated");
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
       const productData = new FormData();
       Object.entries(product).forEach(([key, value]) => {
         if (value) productData.append(key, value);
       });
 
+      setLoadingUpdate(true); // Set loading to true for update
       const { data } = await axios.put(
         `${process.env.REACT_APP_API_URL}/api/v1/product/update-product/${id}`,
-        productData
+        productData,
+        config
       );
 
       if (data?.success) {
@@ -87,42 +121,44 @@ const UpdateProduct = () => {
       }
     } catch (error) {
       toast.error("Failed to update product");
+    } finally {
+      setLoadingUpdate(false); // Reset loading after update
     }
   };
 
-  // Handle product deletion
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
     );
     if (!confirmDelete) return;
 
+    const token = auth?.token;
+    if (!token) {
+      toast.error("You are not authenticated");
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
+      setLoadingDelete(true); // Set loading to true for delete
       await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/v1/product/product-delete/${id}`
+        `${process.env.REACT_APP_API_URL}/api/v1/product/product-delete/${id}`,
+        config
       );
       toast.success("Product Deleted Successfully");
       navigate("/dashboard/admin/products");
     } catch (error) {
       toast.error("Failed to delete product");
+    } finally {
+      setLoadingDelete(false); // Reset loading after delete
     }
   };
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: type === "file" ? files[0] : value,
-    }));
-  };
-
-  useEffect(() => {
-    getSingleProduct();
-    getAllCategory();
-  }, [getSingleProduct]);
-
-  // Destructure product state for cleaner access
   const { name, description, price, quantity, category, shipping, photo } =
     product;
 
@@ -136,7 +172,6 @@ const UpdateProduct = () => {
           <div className="col-md-9">
             <h1>Update Product</h1>
             <div className="m-1 w-75">
-              {/* Category Select */}
               <Select
                 bordered={false}
                 placeholder="Select a category"
@@ -155,7 +190,6 @@ const UpdateProduct = () => {
                 ))}
               </Select>
 
-              {/* Photo Upload */}
               <div className="mb-3">
                 <label className="btn btn-outline-secondary col-md-12">
                   {photo ? photo.name : "Upload Photo"}
@@ -169,7 +203,6 @@ const UpdateProduct = () => {
                 </label>
               </div>
 
-              {/* Photo Preview */}
               <div className="mb-3 text-center">
                 <img
                   src={
@@ -183,7 +216,6 @@ const UpdateProduct = () => {
                 />
               </div>
 
-              {/* Text Inputs */}
               {[
                 { name: "name", value: name, placeholder: "Write a name" },
                 {
@@ -221,7 +253,6 @@ const UpdateProduct = () => {
                 </div>
               ))}
 
-              {/* Shipping Select */}
               <Select
                 bordered={false}
                 placeholder="Select Shipping"
@@ -236,18 +267,22 @@ const UpdateProduct = () => {
                 <Option value="1">Yes</Option>
               </Select>
 
-              {/* Action Buttons */}
               <div className="mb-3">
-                <button className="btn btn-custom" onClick={handleUpdate}>
-                  UPDATE PRODUCT
+                <button
+                  className="btn btn-custom"
+                  onClick={handleUpdate}
+                  disabled={loadingUpdate}
+                >
+                  {loadingUpdate ? "Updating..." : "UPDATE PRODUCT"}
                 </button>
               </div>
               <div className="mb-3">
                 <button
                   className="btn btn-custom category-button-custom-delete"
                   onClick={handleDelete}
+                  disabled={loadingDelete}
                 >
-                  DELETE PRODUCT
+                  {loadingDelete ? "Deleting..." : "DELETE PRODUCT"}
                 </button>
               </div>
             </div>
