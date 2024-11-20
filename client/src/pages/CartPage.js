@@ -1,19 +1,21 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Layout from "../components/Layout/Layout";
 import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
 import { Button, Pagination, Spin } from "antd";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import { Navigate } from "react-router-dom";
+import braintree from "braintree-web-drop-in";
 
 const CartPage = () => {
   const { cart, setCart } = useCart();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [dropinInstance, setDropinInstance] = useState(null);
+  const [clientToken, setClientToken] = useState(null);
   const pageSize = 4;
-  const navigate = useNavigate();
 
   const calculateTotal = useMemo(
     () => cart?.reduce((total, item) => total + item.price, 0).toFixed(2),
@@ -32,15 +34,73 @@ const CartPage = () => {
     toast.success("Removed from cart successfully!");
   };
 
-  const handleProceedToCheckout = () => {
-    if (!auth?.token) {
-      toast.error("Please log in to proceed to checkout.");
+  const handlePageChange = (page) => setCurrentPage(page);
+
+  useEffect(() => {
+    const fetchClientToken = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/v1/product/braintree/token`
+        );
+        const data = await response.json();
+        setClientToken(data.clientToken);
+      } catch (error) {
+        console.error("Error fetching client token:", error);
+      }
+    };
+    if (auth?.token) fetchClientToken();
+  }, [auth]);
+
+  useEffect(() => {
+    if (clientToken) {
+      braintree.dropin.create(
+        {
+          authorizationToken: clientToken,
+          container: "#dropin-container",
+        },
+        (err, instance) => {
+          if (err) {
+            console.error("Error creating Drop-in instance:", err);
+            return;
+          }
+          setDropinInstance(instance);
+        }
+      );
+    }
+  }, [clientToken]);
+
+  const handlePayment = async () => {
+    if (!dropinInstance) {
+      toast.error("Drop-in UI is not ready.");
       return;
     }
-    navigate("/checkout");
+    setLoading(true);
+    try {
+      const { nonce } = await dropinInstance.requestPaymentMethod();
+      const paymentData = { cart, nonce };
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/v1/product/braintree/payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(paymentData),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Transaction successful");
+        setCart([]);
+        localStorage.removeItem("cart");
+      } else {
+        toast.error(`Transaction failed: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      toast.error("Something went wrong with the payment.");
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const handlePageChange = (page) => setCurrentPage(page);
 
   return (
     <Layout>
@@ -90,7 +150,7 @@ const CartPage = () => {
                         <Button
                           type="primary"
                           size="small"
-                          onClick={() => navigate(`/product/${product.slug}`)}
+                          onClick={() => Navigate(`/product/${product.slug}`)}
                           style={{ fontSize: "12px", padding: "5px 10px" }}
                         >
                           More Details
@@ -127,14 +187,16 @@ const CartPage = () => {
                 <h4>Cart Summary</h4>
                 <p>Total Items: {cart.length}</p>
                 <p>Total Price: ₹{calculateTotal}</p>
+                <div id="dropin-container"></div>
                 <Button
                   type="primary"
                   block
                   size="large"
-                  onClick={handleProceedToCheckout}
+                  onClick={handlePayment}
                   style={{ borderRadius: "5px", padding: "12px" }}
+                  disabled={loading}
                 >
-                  {auth?.token ? "Proceed to Checkout" : "Login to Checkout"}
+                  {loading ? "Processing..." : "Proceed to Payment"}
                 </Button>
               </div>
             )}

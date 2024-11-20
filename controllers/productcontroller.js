@@ -2,7 +2,12 @@ import productModel from "../models/productModel.js";
 import fs from "fs";
 import slugify from "slugify";
 import categoryModels from "../models/categoryModels.js";
+import braintree from "braintree";
+import { error } from "console";
+import orderModel from "../models/orderModel.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 // Validation helper
 const validateProductFields = (fields, photo) => {
   const { name, description, price, category, quantity } = fields;
@@ -14,6 +19,14 @@ const validateProductFields = (fields, photo) => {
   if (photo && photo.size > 1000000) return "Photo must be less than 1MB";
   return null;
 };
+
+// ..payement gateway
+var gateway = new braintree.BraintreeGateway({
+  environment: braintree.Environment.Sandbox,
+  merchantId: process.env.BRAINTREE_MERCHANT,
+  publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+  privateKey: process.env.BRAINTREE_PRIVATE_KEY,
+});
 
 // Create product controller
 export const createProductController = async (req, res) => {
@@ -183,6 +196,83 @@ export const pCg = async (req, res) => {
       success: false,
       error,
       message: "Error While Getting products",
+    });
+  }
+};
+
+//payment gateway api
+//token
+export const bTC = async (req, res) => {
+  try {
+    gateway.clientToken.generate({}, (err, response) => {
+      if (err) {
+        res.status(500).send(error);
+      } else {
+        res.send(response);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      success: false,
+      error: error.message || error,
+      message: "Unexpected error occurred",
+    });
+  }
+};
+
+// Payment Handler
+export const bTm = async (req, res) => {
+  try {
+    const { cart, nonce } = req.body;
+
+    // Calculate the total amount
+    let total = 0;
+    cart.forEach((item) => {
+      total += item.price;
+    });
+
+    // Creating transaction
+    const result = await new Promise((resolve, reject) => {
+      gateway.transaction.sale(
+        {
+          amount: total,
+          paymentMethodNonce: nonce,
+          options: { submitForSettlement: true },
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+    });
+
+    if (result.success) {
+      // Save the order to the database
+      const order = await new orderModel({
+        products: cart,
+        payment: result,
+        buyer: req.user._id,
+      }).save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Transaction successful",
+        order,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Transaction failed",
+        error: result.message,
+      });
+    }
+  } catch (error) {
+    console.error("Payment Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong during the transaction",
+      error: error.message,
     });
   }
 };
