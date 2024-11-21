@@ -87,5 +87,4 @@ Contributions are welcome! If you'd like to improve the project, feel free to fo
 
 - [MERN Stack Documentation](https://www.mongodb.com/mern-stack)
 - [React Documentation](https://reactjs.org/docs/getting-started.html)
-- [Stripe Documentation](https://stripe.com/docs)
 - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
