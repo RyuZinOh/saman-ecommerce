@@ -2,6 +2,8 @@
 
 Welcome to the **Saman E-commerce Web Application**! This is a full-stack e-commerce platform built with the **MERN stack** (MongoDB, Express.js, React, Node.js). The platform provides an intuitive online shopping experience, allowing users to browse, shop, and manage their orders securely.
 
+<iframe width="400" height="300" src="https://www.youtube.com/embed/3f4DREnGzrc" frameborder="0" allowfullscreen></iframe>
+
 ## Table of Contents
 
 - [Introduction](#introduction)
