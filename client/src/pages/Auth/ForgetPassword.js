@@ -46,7 +46,7 @@ const ForgetPassword = () => {
 
   return (
     <Layout
-      title="Forgot Password - My Website"
+      title="Forgot Password - saman"
       description="Reset your password for My Website."
     >
       <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">

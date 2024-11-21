@@ -17,7 +17,12 @@ const Categories = () => {
   }
 
   return (
-    <Layout title={"All Categories"}>
+    <Layout
+      title="All Categories"
+      description="Browse all product categories available on our platform."
+      author="Safal Lama"
+      keywords="categories, products, browse, shop"
+    >
       <div className="container">
         <h1 className="text-center my-4">All Categories</h1>
         <div className="row">

@@ -40,9 +40,9 @@ const Profile = () => {
 
   return (
     <Layout
-      title="Your Profile - Ecommerce App"
+      title={`Your Profile - ${auth?.user?.name}`}
       description="View and update your personal profile details in the Ecommerce App. Manage your account settings and preferences."
-      author="Ecommerce App Team"
+      author="Safal Lama"
       keywords="User profile, account settings, manage profile, personal information, ecommerce profile"
     >
       <div className="container-fluid m-3 p-3">

@@ -4,9 +4,9 @@ import Layout from "../components/Layout/Layout";
 const About = () => {
   return (
     <Layout
-      title="About Us - My Website"
+      title="About Us - Saman"
       description="Learn more about our mission, values, and the team behind My Website."
-      author="My Website Team"
+      author="Safal lama"
       keywords="About us, mission, team, values"
     >
       <div className="container my-5">

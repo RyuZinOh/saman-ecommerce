@@ -5,12 +5,12 @@ import { useAuth } from "../../context/auth";
 
 const AdminDashboard = () => {
   const { auth } = useAuth();
-  
+
   return (
     <Layout
-      title="Dashboard - Admin Overview - My Website"
+      title="Dashboard - Admin Overview - saman"
       description="View and manage admin details in the dashboard. Admin profile includes name, email, and contact information."
-      author="My Website Team"
+      author="safal lama"
       keywords="Admin dashboard, admin profile, manage users, admin contact, admin details"
     >
       <div className="container-fluid m-3 p-3">

@@ -7,10 +7,16 @@ const Contact = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Contact Us - My Website</title>
-        <meta name="description" content="Get in touch with us for any queries or feedback. We are here to assist you!" />
-        <meta name="author" content="My Website Team" />
-        <meta name="keywords" content="contact, get in touch, customer support, feedback" />
+        <title>Contact Us - Saman</title>
+        <meta
+          name="description"
+          content="Get in touch with us for any queries or feedback. We are here to assist you!"
+        />
+        <meta name="author" content="Safal lama" />
+        <meta
+          name="keywords"
+          content="contact, get in touch, customer support, feedback"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
 

@@ -4,9 +4,9 @@ import Layout from "../components/Layout/Layout";
 const Policy = () => {
   return (
     <Layout
-      title="Privacy Policy - My Website"
+      title="Privacy Policy - Saman"
       description="Read our privacy policy to understand how we collect, use, and protect your personal information."
-      author="My Website Team"
+      author="Safal lama"
       keywords="privacy policy, terms of use, data protection, user rights"
     >
       <div className="container my-5">
@@ -16,9 +16,10 @@ const Policy = () => {
           <div className="col-12 col-md-10 col-lg-8">
             <h3 className="mb-4">Introduction</h3>
             <p>
-              Welcome to My Website. We value your privacy and are committed to
-              protecting your personal data. This privacy policy outlines how we
-              collect, use, and safeguard your personal information.
+              Welcome to Saman - ecommerce. We value your privacy and are
+              committed to protecting your personal data. This privacy policy
+              outlines how we collect, use, and safeguard your personal
+              information.
             </p>
 
             <h3 className="mb-4">Information We Collect</h3>
@@ -79,7 +80,7 @@ const Policy = () => {
             <h3 className="mb-4">Contact Us</h3>
             <p>
               If you have any questions about this privacy policy or your
-              personal data, please contact us at [email@example.com].
+              personal data, please contact us at [yoyuehappy@gmail.com].
             </p>
           </div>
         </div>

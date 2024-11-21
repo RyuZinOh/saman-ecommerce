@@ -6,14 +6,18 @@ const Pagenotfound = () => {
   return (
     <Layout>
       <Helmet>
-        <title>404 - Page Not Found</title>
+        <title>saman - 404 - Page Not Found</title>
         <meta
           name="description"
           content="Oops! The page you are looking for doesn't exist or has been moved. Please check the URL or return to the homepage."
         />
-        <meta name="author" content="My Website Team" />
-        <meta name="keywords" content="404, page not found, error page, website error, missing page" />
-        <meta name="robots" content="noindex, nofollow" /> {/* To prevent this page from being indexed */}
+        <meta name="author" content="Safal lama" />
+        <meta
+          name="keywords"
+          content="404, page not found, error page, website error, missing page"
+        />
+        <meta name="robots" content="noindex, nofollow" />{" "}
+        {/* To prevent this page from being indexed */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
 

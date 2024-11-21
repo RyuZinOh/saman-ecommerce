@@ -110,9 +110,9 @@ const CreateCategory = () => {
 
   return (
     <Layout
-      title="Dashboard - Manage Category - My Website"
+      title="Dashboard - Manage Category - Saman"
       description="View and manage product categories in the admin dashboard."
-      author="My Website Team"
+      author="safal lama"
       keywords="Manage categories, product categories, admin dashboard"
     >
       <div className="container-fluid m-3 p-3">

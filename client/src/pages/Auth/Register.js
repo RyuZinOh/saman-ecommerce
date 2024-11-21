@@ -72,9 +72,9 @@ const Register = () => {
 
   return (
     <Layout
-      title="Register - My Website"
+      title="Register - Saman Ecommerce"
       description="Sign up for an account on My Website to access exclusive features."
-      author="My Website Team"
+      author="safal lama"
       keywords="register, sign up, user account"
     >
       <div className="register d-flex justify-content-center align-items-center min-vh-100 bg-white">

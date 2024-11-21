@@ -38,7 +38,7 @@ const CategoryProduct = () => {
     <>
       <Layout>
         <Helmet>
-          <title>{category?.name} - My E-Commerce</title>
+          <title>{category?.name} - Saman</title>
           <meta
             name="description"
             content={`Browse the best products in the ${category?.name} category. Find amazing deals and offers.`}

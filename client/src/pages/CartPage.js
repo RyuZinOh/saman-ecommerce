@@ -77,11 +77,12 @@ const CartPage = () => {
   };
 
   return (
-    <Layout>
-      <Helmet>
-        <title>Cart - My Website</title>
-        <meta name="description" content="Your shopping cart." />
-      </Helmet>
+    <Layout
+      title="Saman - Cart "
+      description="Review and manage the items in your shopping cart."
+      author="safal lama"
+      keywords="cart, shopping, payment, products"
+    >
       <div className="container">
         <div className="row mt-4">
           <div className="col-md-9">

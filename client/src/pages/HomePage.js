@@ -91,11 +91,12 @@ const HomePage = () => {
   }, [filterProducts, pageSize, currentPage]);
 
   return (
-    <Layout>
-      <Helmet>
-        <title>Home - My Website</title>
-        <meta name="description" content="Welcome to My Website." />
-      </Helmet>
+    <Layout
+      title="Saman - Home"
+      description="Discover the best products at affordable prices. Shop categories, filter by price, and find exactly what you need on My Website."
+      keywords="products, shopping, affordable prices, categories, filters"
+      author="safal lama"
+    >
       <div className="row mt-3">
         <div className="col-md-2">
           <Input
@@ -186,7 +187,7 @@ const HomePage = () => {
                             localStorage.setItem(
                               "cart",
                               JSON.stringify(updatedCart)
-                            ); 
+                            );
                             toast.success("Added to cart successfully!");
                           }}
                         >

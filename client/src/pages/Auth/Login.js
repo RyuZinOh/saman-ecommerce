@@ -59,9 +59,9 @@ const Login = () => {
 
   return (
     <Layout
-      title="Login - My Website"
+      title="Login - Saman Ecommerce"
       description="Log in to access your account on My Website."
-      author="My Website Team"
+      author="safal lama"
       keywords="login, user account"
     >
       <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">

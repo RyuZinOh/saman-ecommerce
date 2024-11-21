@@ -57,12 +57,12 @@ const ProductDetails = () => {
   return (
     <Layout>
       <Helmet>
-        <title>{product.name} - My E-Commerce</title>
+        <title>{product.name} - Saman</title>
         <meta
           name="description"
           content={`Find out more about ${product.name} in the ${product.category?.name} category. Best price and amazing features.`}
         />
-        <meta name="author" content="My E-Commerce Team" />
+        <meta name="author" content="Safal lama" />
         <meta
           name="keywords"
           content={`${product.name}, ${product.category?.name}, buy online, best price, product details`}

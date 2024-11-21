@@ -5,9 +5,9 @@ import Layout from "./../../components/Layout/Layout";
 const Users = () => {
   return (
     <Layout
-      title="Dashboard - All Users - My Website"
+      title="Dashboard - All Users - Saman"
       description="Manage and view all users in the admin dashboard. Access user data and perform actions on user accounts."
-      author="My Website Team"
+      author="safal lama"
       keywords="Admin dashboard, users, user management, view users, manage accounts"
     >
       <div className="container-fluid m-3 p-3">

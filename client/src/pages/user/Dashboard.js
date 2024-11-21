@@ -5,12 +5,12 @@ import { useAuth } from "../../context/auth";
 
 const Dashboard = () => {
   const { auth } = useAuth();
-  
+
   return (
     <Layout
-      title="Dashboard - Ecommerce App"
+      title={`Dashboard - ${auth?.user?.name}`}
       description="User dashboard of the Ecommerce App. View personal details including name, email, and address."
-      author="Ecommerce App Team"
+      author="Safal Lama"
       keywords="Ecommerce dashboard, user profile, user details, account settings, personal information"
     >
       <div className="container-fluid m-3 p-3">
