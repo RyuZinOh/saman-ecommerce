@@ -51,5 +51,5 @@ router.get("/product-category/:slug", pCg);
 //paytment routes
 router.get("/braintree/token", bTC);
 
-router.post("/braintree/payment", bTm);
+router.post("/braintree/payment", requireSignIn, bTm);
 export default router;

@@ -12,12 +12,12 @@ const orderSchema = new mongoose.Schema(
     payment: {},
     buyer: {
       type: mongoose.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     status: {
       type: String,
       default: "not processed",
-      enum: ["not processed", "processing", "shipped", "delivered"],
+      enum: ["not processed", "processing", "shipped", "delivered", "cancel"],
     },
   },
   { timestamps: true }

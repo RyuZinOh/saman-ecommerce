@@ -5,16 +5,18 @@ import { useAuth } from "../context/auth";
 import { Button, Pagination, Spin } from "antd";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
-import { Navigate } from "react-router-dom";
-import braintree from "braintree-web-drop-in";
+import { useNavigate } from "react-router-dom";
+import DropIn from "braintree-web-drop-in-react";
+import axios from "axios";
 
 const CartPage = () => {
   const { cart, setCart } = useCart();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dropinInstance, setDropinInstance] = useState(null);
-  const [clientToken, setClientToken] = useState(null);
+  const navigate = useNavigate();
+  const [instance, setInstance] = useState("");
+  const [clientToken, setClientToken] = useState("");
   const pageSize = 4;
 
   const calculateTotal = useMemo(
@@ -39,10 +41,9 @@ const CartPage = () => {
   useEffect(() => {
     const fetchClientToken = async () => {
       try {
-        const response = await fetch(
+        const { data } = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/v1/product/braintree/token`
         );
-        const data = await response.json();
         setClientToken(data.clientToken);
       } catch (error) {
         console.error("Error fetching client token:", error);
@@ -51,54 +52,27 @@ const CartPage = () => {
     if (auth?.token) fetchClientToken();
   }, [auth]);
 
-  useEffect(() => {
-    if (clientToken) {
-      braintree.dropin.create(
-        {
-          authorizationToken: clientToken,
-          container: "#dropin-container",
-        },
-        (err, instance) => {
-          if (err) {
-            console.error("Error creating Drop-in instance:", err);
-            return;
-          }
-          setDropinInstance(instance);
-        }
-      );
-    }
-  }, [clientToken]);
-
   const handlePayment = async () => {
-    if (!dropinInstance) {
-      toast.error("Drop-in UI is not ready.");
-      return;
-    }
-    setLoading(true);
     try {
-      const { nonce } = await dropinInstance.requestPaymentMethod();
-      const paymentData = { cart, nonce };
-      const response = await fetch(
+      setLoading(true);
+      const { nonce } = await instance.requestPaymentMethod();
+      const { data } = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/v1/product/braintree/payment`,
+        { nonce, cart },
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(paymentData),
+          headers: {
+            Authorization: `Bearer ${auth?.token}`,
+          },
         }
       );
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Transaction successful");
-        setCart([]);
-        localStorage.removeItem("cart");
-      } else {
-        toast.error(`Transaction failed: ${data.message}`);
-      }
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      toast.error("Something went wrong with the payment.");
-    } finally {
       setLoading(false);
+      localStorage.removeItem("cart");
+      setCart([]);
+      navigate("/dashboard/user/orders");
+      toast.success("Payment Completed Successfully");
+    } catch (error) {
+      setLoading(false);
+      console.error("Error processing payment:", error);
     }
   };
 
@@ -150,7 +124,7 @@ const CartPage = () => {
                         <Button
                           type="primary"
                           size="small"
-                          onClick={() => Navigate(`/product/${product.slug}`)}
+                          onClick={() => navigate(`/product/${product.slug}`)}
                           style={{ fontSize: "12px", padding: "5px 10px" }}
                         >
                           More Details
@@ -187,17 +161,27 @@ const CartPage = () => {
                 <h4>Cart Summary</h4>
                 <p>Total Items: {cart.length}</p>
                 <p>Total Price: ₹{calculateTotal}</p>
-                <div id="dropin-container"></div>
-                <Button
-                  type="primary"
-                  block
-                  size="large"
+                <div id="dropin-container" className="mt-3">
+                  {!clientToken || !cart?.length ? (
+                    ""
+                  ) : (
+                    <DropIn
+                      options={{
+                        authorization: clientToken,
+                        paypal: { flow: "vault" },
+                      }}
+                      onInstance={(instance) => setInstance(instance)}
+                    />
+                  )}
+                </div>
+                <button
+                  className="btn btn-primary w-100 mt-3"
                   onClick={handlePayment}
-                  style={{ borderRadius: "5px", padding: "12px" }}
-                  disabled={loading}
+                  disabled={loading || !instance || !auth?.user?.address}
+                  style={{ padding: "12px", borderRadius: "5px" }}
                 >
-                  {loading ? "Processing..." : "Proceed to Payment"}
-                </Button>
+                  {loading ? "Processing ...." : "Make Payment"}
+                </button>
               </div>
             )}
           </div>

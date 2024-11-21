@@ -200,43 +200,32 @@ export const pCg = async (req, res) => {
   }
 };
 
-//payment gateway api
 //token
 export const bTC = async (req, res) => {
   try {
-    gateway.clientToken.generate({}, (err, response) => {
-      if (err) {
-        res.status(500).send(error);
-      } else {
-        res.send(response);
-      }
+    const tokenResponse = await new Promise((resolve, reject) => {
+      gateway.clientToken.generate({}, (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      });
     });
+    res.json(tokenResponse);
   } catch (error) {
-    console.error(error);
-    res.status(400).send({
-      success: false,
-      error: error.message || error,
-      message: "Unexpected error occurred",
-    });
+    console.error("Error generating client token:", error);
+    res.status(500).json({ error: "Failed to generate client token" });
   }
 };
 
-// Payment Handler
+//payment
 export const bTm = async (req, res) => {
   try {
-    const { cart, nonce } = req.body;
+    const { nonce, cart } = req.body;
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
 
-    // Calculate the total amount
-    let total = 0;
-    cart.forEach((item) => {
-      total += item.price;
-    });
-
-    // Creating transaction
-    const result = await new Promise((resolve, reject) => {
+    const transactionResult = await new Promise((resolve, reject) => {
       gateway.transaction.sale(
         {
-          amount: total,
+          amount: total.toFixed(2), // Ensure amount is in a proper format
           paymentMethodNonce: nonce,
           options: { submitForSettlement: true },
         },
@@ -247,32 +236,21 @@ export const bTm = async (req, res) => {
       );
     });
 
-    if (result.success) {
-      // Save the order to the database
+    if (transactionResult.success) {
       const order = await new orderModel({
         products: cart,
-        payment: result,
+        payment: transactionResult,
         buyer: req.user._id,
       }).save();
 
-      return res.status(200).json({
-        success: true,
-        message: "Transaction successful",
-        order,
-      });
+      res.json({ ok: true, order });
     } else {
-      return res.status(400).json({
-        success: false,
-        message: "Transaction failed",
-        error: result.message,
-      });
+      res
+        .status(500)
+        .json({ error: "Transaction failed", details: transactionResult });
     }
   } catch (error) {
-    console.error("Payment Error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong during the transaction",
-      error: error.message,
-    });
+    console.error("Error processing payment:", error);
+    res.status(500).json({ error: "Failed to process payment" });
   }
 };
