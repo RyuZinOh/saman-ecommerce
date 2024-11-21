@@ -40,7 +40,7 @@ const Products = () => {
   const paginatedProducts = paginate(products);
 
   return (
-    <Layout>
+    <Layout title="Dashboard - All Products">
       <div className="row goku-row">
         <div className="col-md-3 naruto-menu">
           <AdminMenu />
