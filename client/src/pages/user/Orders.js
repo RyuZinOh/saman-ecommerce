@@ -48,7 +48,7 @@ const Orders = () => {
     return {
       orderId: order._id,
       buyerName: order.buyer.name,
-      products: order.products.map((product) => `${product.name}`).join(", "), 
+      products: order.products.map((product) => `${product.name}`).join(", "),
       totalPrice: `₹${totalPrice.toFixed(2)}`,
       paymentStatus:
         order.payment.transaction.status === "submitted_for_settlement"
@@ -79,55 +79,57 @@ const Orders = () => {
             ) : error ? (
               <p className="error">{error}</p>
             ) : (
-              <table className="table table-striped table-hover">
-                <thead className="thead-dark">
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Buyer Name</th>
-                    <th>Products</th>
-                    <th>Total Price</th>
-                    <th>Payment Status</th>
-                    <th>Shipping Status</th>
-                    <th>Order Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => {
-                    const formattedOrder = formatOrderData(order);
-                    return (
-                      <tr key={formattedOrder.orderId}>
-                        <td>{formattedOrder.orderId}</td>
-                        <td>{formattedOrder.buyerName}</td>
-                        <td>{formattedOrder.products}</td>
-                        <td>{formattedOrder.totalPrice}</td>
-                        <td>
-                          {formattedOrder.paymentStatus === "Completed" ? (
-                            <span className="text-success">
-                              <FaCheckCircle /> Completed
-                            </span>
-                          ) : (
-                            <span className="text-warning">
-                              <FaSpinner className="spin" /> Pending
-                            </span>
-                          )}
-                        </td>
-                        <td>
-                          {formattedOrder.shippingStatus === "Shipped" ? (
-                            <span className="text-primary">
-                              <FaShippingFast /> Shipped
-                            </span>
-                          ) : (
-                            <span className="text-danger">
-                              <FaTimesCircle /> Processing
-                            </span>
-                          )}
-                        </td>
-                        <td>{formattedOrder.orderDate}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="table-container">
+                <table className="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Buyer Name</th>
+                      <th>Products</th>
+                      <th>Total Price</th>
+                      <th>Payment Status</th>
+                      <th>Shipping Status</th>
+                      <th>Order Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => {
+                      const formattedOrder = formatOrderData(order);
+                      return (
+                        <tr key={formattedOrder.orderId}>
+                          <td>{formattedOrder.orderId}</td>
+                          <td>{formattedOrder.buyerName}</td>
+                          <td>{formattedOrder.products}</td>
+                          <td>{formattedOrder.totalPrice}</td>
+                          <td>
+                            {formattedOrder.paymentStatus === "Completed" ? (
+                              <span className="text-success">
+                                <FaCheckCircle /> Completed
+                              </span>
+                            ) : (
+                              <span className="text-warning">
+                                <FaSpinner className="spin" /> Pending
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            {formattedOrder.shippingStatus === "Shipped" ? (
+                              <span className="text-primary">
+                                <FaShippingFast /> Shipped
+                              </span>
+                            ) : (
+                              <span className="text-danger">
+                                <FaTimesCircle /> Processing
+                              </span>
+                            )}
+                          </td>
+                          <td>{formattedOrder.orderDate}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>

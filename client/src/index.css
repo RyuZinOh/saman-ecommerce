@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;400;700&family=Poppins:wght@400;600;700&display=swap");
-
 :root {
   --primary-bg: linear-gradient(135deg, #333, #000);
   --navbar-height: 100px;
@@ -9,6 +7,7 @@
   --font-size-xl: 1.5rem;
   --font-size-xxl: 3rem;
   --font-color: white;
+  --brand-color: #ffffff;
   --hover-color: #ffefba;
   --shadow-color: rgb(255, 255, 255);
 }
@@ -42,7 +41,7 @@ html {
 }
 
 .nav-link {
-  font-family: "Kanit", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: var(--font-size-lg);
   color: var(--font-color);
   text-transform: capitalize;
@@ -52,16 +51,17 @@ html {
 .nav-link:hover {
   color: var(--hover-color);
 }
+
 .nav-link.active {
   color: white !important;
-  border-bottom: 2px solid rgb(255, 255, 255);
+  border-bottom: 2px solid #fff;
 }
 
 .navbar-brand {
   font-family: "Poppins", sans-serif;
   letter-spacing: 3px;
   font-size: var(--font-size-xxl);
-  color: var(--font-color);
+  color: var(--brand-color);
   text-transform: uppercase;
   transition: color 0.3s ease;
 }
@@ -70,20 +70,62 @@ html {
   color: var(--hover-color);
 }
 
-.navbar-nav .dropdown-toggle {
-  color: var(--font-color) !important;
-  background: transparent;
+.navbar-toggler {
   border: none;
-  font-size: var(--font-size-lg);
-  text-transform: capitalize;
-  cursor: pointer;
-  transition: color 0.3s ease;
+  padding: 0;
+  background: transparent;
 }
 
-.navbar-nav .dropdown-toggle:focus,
-.navbar-nav .dropdown-toggle:active {
-  color: var(--font-color) !important;
-  outline: none;
+.navbar-toggler-icon {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  left: 0;
+}
+
+.navbar-toggler-icon::before {
+  top: -10px;
+}
+
+.navbar-toggler-icon::after {
+  top: 10px;
+}
+
+.navbar-toggler.open .navbar-toggler-icon {
+  transform: rotate(45deg);
+}
+
+.navbar-toggler.open .navbar-toggler-icon::before {
+  transform: rotate(90deg);
+  top: 0;
+}
+
+.navbar-toggler.open .navbar-toggler-icon::after {
+  opacity: 0;
+}
+
+.collapse.navbar-collapse {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.navbar {
+  z-index: 9999 !important;
+}
+
+.nav-item {
+  font-size: 18px;
 }
 
 .navbar-nav .dropdown-menu {
@@ -136,19 +178,20 @@ html {
   flex-direction: column;
 }
 
-/* Layout */
-.goku-row {
+.goku-row,
+.naruto-menu,
+.luffy-content {
   margin: 0;
   padding: 0;
 }
 
 .naruto-menu {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 1rem;
 }
 
 .luffy-content {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 2rem;
 }
 
@@ -158,7 +201,6 @@ html {
   margin-bottom: 1.5rem;
 }
 
-/* Cards */
 .zoro-card-container {
   display: flex;
   flex-wrap: wrap;
@@ -199,7 +241,6 @@ html {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Image */
 .gojo-img {
   height: 16rem;
   object-fit: cover;
@@ -210,7 +251,6 @@ html {
   transform: scale(1.1);
 }
 
-/* Card Body */
 .levi-body {
   padding: 0.5rem;
   text-align: center;
@@ -229,25 +269,21 @@ html {
   margin-top: auto;
 }
 
-/* Hover effect for cards */
 .hover-card:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-card-img-top {
+.card-img-top {
   transition: transform 0.3s ease-in-out;
 }
 
-.card-img-top:hover {
-  transform: scale(1.1);
-}
+.card-img-top:hover,
 .hover-card:hover .card-img-top {
   transform: scale(1.1);
 }
 
-/* product details page */
 .product-image img {
   max-height: 400px;
   object-fit: cover;
@@ -304,6 +340,7 @@ card-img-top {
   font-weight: 600;
   margin-bottom: 20px;
 }
+
 .zoom-img {
   transition: transform 0.3s ease-in-out;
   object-fit: cover;
@@ -313,6 +350,7 @@ card-img-top {
 .zoom-img:hover {
   transform: scale(1.2);
 }
+
 .spin {
   animation: spin 1s infinite;
 }
@@ -326,11 +364,124 @@ card-img-top {
   }
 }
 
-.table td,
-.table th {
-  vertical-align: middle;
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
 }
 
-.table-hover tbody tr:hover {
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #333;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.table tbody tr:hover {
   background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.table tbody td {
+  color: #444;
+}
+
+.table .text-success {
+  color: #28a745;
+}
+
+.table .text-warning {
+  color: #ffc107;
+}
+
+.table .text-primary {
+  color: #007bff;
+}
+
+.table .text-danger {
+  color: #dc3545;
+}
+
+.table .spin {
+  animation: spin 1s infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Make sure the table works well on smaller screens */
+@media (max-width: 991px) {
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .table-container {
+    overflow-x: scroll;
+  }
+
+  .table th {
+    font-size: 1.1rem;
+  }
+
+  .table td {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 991px) {
+  :root {
+    --font-size-base: 0.9rem;
+    --font-size-lg: 1.2rem;
+    --font-size-xxl: 2.5rem;
+    --brand-color: #ff6347;
+  }
+
+  .navbar-brand {
+    font-size: var(--font-size-xxl);
+    color: var(--brand-color);
+  }
+
+  .nav-link {
+    font-size: var(--font-size-lg);
+  }
+
+  .card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .zoro-card-container {
+    flex-direction: column;
+  }
+
+  .product-image img {
+    max-height: 250px;
+  }
+
+  .product-info h1 {
+    font-size: 1.5rem;
+  }
 }
