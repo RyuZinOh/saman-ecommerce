@@ -2,6 +2,7 @@
 import userModel from "../models/userModel.js";
 import { hashPassword, comparePassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
+import orderModel from "../models/orderModel.js";
 export const registerController = async (req, res) => {
   try {
     const { name, email, password, phone, address, fpassA } = req.body;
@@ -174,7 +175,7 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    let hashedPassword = user.password; 
+    let hashedPassword = user.password;
     if (password) {
       if (password.length < 6) {
         return res.status(400).json({
@@ -207,6 +208,25 @@ export const updateProfile = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error updating profile",
+      error: error.message,
+    });
+  }
+};
+
+//getting the orders
+export const getOrderc = async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find({ buyer: req.user._id })
+      .populate("products", "-photo")
+      .populate("buyer", "name");
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error getting orders:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error occurred getting orders",
       error: error.message,
     });
   }

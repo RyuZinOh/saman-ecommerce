@@ -241,7 +241,7 @@ card-img-top {
 }
 
 .card-img-top:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 .hover-card:hover .card-img-top {
   transform: scale(1.1);
@@ -312,4 +312,25 @@ card-img-top {
 
 .zoom-img:hover {
   transform: scale(1.2);
+}
+.spin {
+  animation: spin 1s infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
 }
