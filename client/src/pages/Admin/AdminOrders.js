@@ -99,7 +99,12 @@ const AdminOrders = () => {
   }
 
   return (
-    <Layout title="Admin Orders">
+    <Layout
+      title={`manage orders`}
+      description="Vadmin managing orders shipping status and auto payment updation"
+      author="Safal Lama"
+      keywords="just manging orders per"
+    >
       <div className="row">
         <div className="col-md-4">
           <AdminMenu />
