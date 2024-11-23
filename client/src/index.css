@@ -38,6 +38,11 @@ html {
   border-bottom: solid gray;
   height: var(--navbar-height);
   background: var(--primary-bg);
+  transition: background 0.3s ease-in-out;
+}
+
+.navbar:hover {
+  background: linear-gradient(135deg, #000, #444); /* Darkens on hover */
 }
 
 .nav-link {
@@ -45,11 +50,12 @@ html {
   font-size: var(--font-size-lg);
   color: var(--font-color);
   text-transform: capitalize;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .nav-link:hover {
   color: var(--hover-color);
+  transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .nav-link.active {
@@ -63,11 +69,12 @@ html {
   font-size: var(--font-size-xxl);
   color: var(--brand-color);
   text-transform: uppercase;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .navbar-brand:hover {
   color: var(--hover-color);
+  transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .navbar-toggler {
@@ -157,17 +164,24 @@ html {
   background: var(--primary-bg);
   box-shadow: 0px 4px 8px var(--shadow-color);
   width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.footer:hover {
+  background: linear-gradient(135deg, #444, #000); /* Darken on hover */
 }
 
 .footer a {
   text-decoration: none;
   color: var(--font-color);
   padding: 10px;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footer a:hover {
   color: var(--hover-color);
   border-bottom: 1px solid var(--hover-color);
+  transform: translateY(-2px); /* Lift effect */
 }
 
 .register {
@@ -214,7 +228,7 @@ html {
 }
 
 .saitama-card {
-  width: 18rem;
+  width: 20rem;
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
@@ -231,24 +245,38 @@ html {
   justify-content: space-between;
   gap: 0.5rem;
 }
-
+/* .mt-3 {
+  margin-top: 1rem !important;
+  margin-left: 10rem !important;
+} */
+@media (min-width: 768px) {
+  .col-md-2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+    margin-right: 8rem;
+  }
+}
 .card-body button {
   margin-top: auto;
 }
+.custom-padding-right {
+  padding-right: 15px;
+}
 
 .saitama-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.05); /* Slightly larger on hover */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .gojo-img {
   height: 16rem;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease;
 }
 
 .saitama-card:hover .gojo-img {
   transform: scale(1.1);
+  opacity: 0.9; /* Subtle fade effect */
 }
 
 .levi-body {
@@ -287,6 +315,11 @@ html {
 .product-image img {
   max-height: 400px;
   object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-image img:hover {
+  transform: scale(1.05);
 }
 
 .product-info h1 {
@@ -302,7 +335,7 @@ html {
 .card {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -326,13 +359,14 @@ html {
 
 .btn-primary,
 .btn-outline-primary {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover,
 .btn-outline-primary:hover {
   background-color: #0056b3;
   color: white;
+  transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .related-products h4 {

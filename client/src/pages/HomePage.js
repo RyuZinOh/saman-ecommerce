@@ -3,22 +3,26 @@ import Layout from "../components/Layout/Layout";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import imagehome from "../assets/_saman.png";
+import imagehomeGif from "../assets/mobile-saman.gif";
 import { Checkbox, Slider, Input, Button, Pagination, Spin } from "antd";
 import { SearchOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
+
 const HomePage = () => {
   const { cart, setCart } = useCart();
   const { auth } = useAuth();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [priceRange, setPriceRange] = useState([0, 9999999]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
   const [loading, setLoading] = useState(false);
+  const [bannerImage, setBannerImage] = useState(imagehome);
   const navigate = useNavigate();
 
   const getAllProducts = useCallback(async () => {
@@ -69,15 +73,28 @@ const HomePage = () => {
   const handleSearchChange = (e) => setSearchQuery(e.target.value);
   const handleResetFilters = () => {
     setChecked([]);
-    setPriceRange([0, 50000]);
+    setPriceRange([0, 9999999]);
     setSearchQuery("");
     setCurrentPage(1);
   };
   const handlePageChange = (page) => setCurrentPage(page);
   const handlePriceIncrement = () =>
-    setPriceRange(([min, max]) => [min, Math.min(max + 1000, 50000)]);
+    setPriceRange(([min, max]) => [min, Math.min(max + 1000, 9999999)]);
   const handlePriceDecrement = () =>
     setPriceRange(([min, max]) => [min, Math.max(max - 1000, 0)]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setBannerImage(imagehomeGif);
+      } else {
+        setBannerImage(imagehome);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     getAllProducts();
@@ -85,9 +102,8 @@ const HomePage = () => {
   }, [getAllProducts, getAllCategories]);
 
   useEffect(() => {
-    if (currentPage > Math.ceil(filterProducts.length / pageSize)) {
+    if (currentPage > Math.ceil(filterProducts.length / pageSize))
       setCurrentPage(1);
-    }
   }, [filterProducts, pageSize, currentPage]);
 
   return (
@@ -97,6 +113,17 @@ const HomePage = () => {
       keywords="products, shopping, affordable prices, categories, filters"
       author="safal lama"
     >
+      <div
+        style={{
+          width: "100%",
+          height: "70vh",
+          backgroundImage: `url(${bannerImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          borderRadius: "10px",
+          marginBottom: "20px",
+        }}
+      />
       <div className="row mt-3">
         <div className="col-md-2">
           <Input
@@ -125,7 +152,7 @@ const HomePage = () => {
             <Slider
               range
               min={0}
-              max={50000}
+              max={9999999}
               value={priceRange}
               onChange={handlePriceChange}
               style={{ width: "70%" }}
@@ -142,13 +169,12 @@ const HomePage = () => {
           </Button>
         </div>
         <div className="col-md-9">
-          <h1 className="text-center">All Products</h1>
           {loading ? (
             <div className="text-center">
               <Spin size="large" />
             </div>
           ) : (
-            <div className="d-flex flex-wrap">
+            <div className="d-flex flex-wrap custom-padding-right">
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((product) => (
                   <div key={product._id} className="card m-3 saitama-card">
