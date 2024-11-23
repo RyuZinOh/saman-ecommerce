@@ -228,7 +228,7 @@ html {
 }
 
 .saitama-card {
-  width: 20rem;
+  width: 23rem;
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
@@ -245,17 +245,7 @@ html {
   justify-content: space-between;
   gap: 0.5rem;
 }
-/* .mt-3 {
-  margin-top: 1rem !important;
-  margin-left: 10rem !important;
-} */
-@media (min-width: 768px) {
-  .col-md-2 {
-    flex: 0 0 auto;
-    width: 16.66666667%;
-    margin-right: 8rem;
-  }
-}
+
 .card-body button {
   margin-top: auto;
 }

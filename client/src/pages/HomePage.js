@@ -124,8 +124,8 @@ const HomePage = () => {
           marginBottom: "20px",
         }}
       />
-      <div className="row mt-3">
-        <div className="col-md-2">
+      <div className="row mt-2">
+        <div className="col-md-3">
           <Input
             placeholder="Search products"
             onChange={handleSearchChange}
