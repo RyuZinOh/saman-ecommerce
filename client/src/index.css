@@ -39,6 +39,8 @@ html {
   height: var(--navbar-height);
   background: var(--primary-bg);
   transition: background 0.3s ease-in-out;
+  /* position: fixed;
+  width: 100%; */
 }
 
 .navbar:hover {
