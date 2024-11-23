@@ -231,3 +231,46 @@ export const getOrderc = async (req, res) => {
     });
   }
 };
+
+export const getOrdersA = async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find({})
+      .populate("products", "name price")
+      .populate("buyer", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      message: "Orders fetched successfully",
+      orders,
+    });
+  } catch (error) {
+    console.error("Error getting orders:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error occurred getting orders",
+      error: error.message,
+    });
+  }
+};
+
+//updating status
+export const updateStatusC = async (req, res) => {
+  try {
+    const { orderId, status } = req.body;
+    const orders = await orderModel.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error updating the order status",
+      error,
+    });
+  }
+};

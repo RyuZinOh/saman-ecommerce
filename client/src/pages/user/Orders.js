@@ -45,17 +45,28 @@ const Orders = () => {
       0
     );
 
+    let paymentStatus;
+    let shippingStatus;
+
+    // Determine the shipping status and payment status based on the order status
+    if (order.status === "not processed") {
+      shippingStatus = "Processing";
+      paymentStatus = "Pending"; // If order is not processed, payment is pending
+    } else if (order.status === "shipped") {
+      shippingStatus = "Shipped";
+      paymentStatus = "Completed"; // If shipped, payment is completed (Success)
+    } else {
+      shippingStatus = "Cancelled";
+      paymentStatus = "Failed"; // If cancelled, mark as failed payment status
+    }
+
     return {
       orderId: order._id,
       buyerName: order.buyer.name,
       products: order.products.map((product) => `${product.name}`).join(", "),
       totalPrice: `₹${totalPrice.toFixed(2)}`,
-      paymentStatus:
-        order.payment.transaction.status === "submitted_for_settlement"
-          ? "Pending"
-          : "Completed",
-      shippingStatus:
-        order.status === "not processed" ? "Processing" : "Shipped",
+      paymentStatus,
+      shippingStatus,
       orderDate: new Date(order.createdAt).toLocaleDateString(),
     };
   };
@@ -106,9 +117,13 @@ const Orders = () => {
                               <span className="text-success">
                                 <FaCheckCircle /> Completed
                               </span>
-                            ) : (
+                            ) : formattedOrder.paymentStatus === "Pending" ? (
                               <span className="text-warning">
                                 <FaSpinner className="spin" /> Pending
+                              </span>
+                            ) : (
+                              <span className="text-danger">
+                                <FaTimesCircle /> Failed
                               </span>
                             )}
                           </td>
@@ -117,9 +132,14 @@ const Orders = () => {
                               <span className="text-primary">
                                 <FaShippingFast /> Shipped
                               </span>
-                            ) : (
+                            ) : formattedOrder.shippingStatus ===
+                              "Processing" ? (
                               <span className="text-danger">
                                 <FaTimesCircle /> Processing
+                              </span>
+                            ) : (
+                              <span className="text-danger">
+                                <FaTimesCircle /> Cancelled
                               </span>
                             )}
                           </td>

@@ -32,6 +32,12 @@ const AdminMenu = () => {
             >
               <span>Users</span>
             </NavLink>
+            <NavLink
+              to="/dashboard/admin/orders"
+              className="list-group-item custom-button d-flex align-items-center"
+            >
+              <span>Orders</span>
+            </NavLink>
           </div>
         </div>
       </div>
