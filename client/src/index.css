@@ -170,6 +170,14 @@ html {
 .footer:hover {
   background: linear-gradient(135deg, #444, #000); /* Darken on hover */
 }
+.banner-container {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.banner-container:hover {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
 
 .footer a {
   text-decoration: none;

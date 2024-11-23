@@ -114,6 +114,7 @@ const HomePage = () => {
       author="safal lama"
     >
       <div
+        className="banner-container"
         style={{
           width: "100%",
           height: "70vh",
@@ -124,6 +125,7 @@ const HomePage = () => {
           marginBottom: "20px",
         }}
       />
+
       <div className="row mt-2">
         <div className="col-md-3">
           <Input
