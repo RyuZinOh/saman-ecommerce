@@ -46,30 +46,31 @@ const Products = () => {
           <AdminMenu />
         </div>
         <div className="col-md-9 luffy-content">
-          <h1 className="text-center ichigo-header">All Products List</h1>
-          <div className="d-flex flex-wrap justify-content-center zoro-card-container">
+          <h1 className="text-center ichigo-header mb-4">All Products List</h1>
+          <div className="row g-3 justify-content-center">
             {paginatedProducts.length > 0 ? (
               paginatedProducts.map((p) => (
-                <Link
-                  key={p._id}
-                  to={`/dashboard/admin/product/${p.slug}`}
-                  className="tanjiro-product-link"
-                >
-                  <div className="card m-3 saitama-card">
-                    <img
-                      src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${p._id}`}
-                      className="card-img-top gojo-img"
-                      alt={p.name}
-                    />
-                    <div className="card-body levi-body">
-                      <h5 className="card-title eren-title">{p.name}</h5>
-                      <p className="card-text mikasa-text">{p.description}</p>
+                <div className="col-md-4 col-sm-6 col-xs-12" key={p._id}>
+                  <Link
+                    to={`/dashboard/admin/product/${p.slug}`}
+                    className="tanjiro-product-link"
+                  >
+                    <div className="card h-100">
+                      <img
+                        src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${p._id}`}
+                        className="card-img-top img-fluid"
+                        alt={p.name}
+                      />
+                      <div className="card-body d-flex flex-column">
+                        <h5 className="card-title eren-title">{p.name}</h5>
+                        <p className="card-text mikasa-text">{p.description}</p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               ))
             ) : (
-              <div className="text-center">
+              <div className="text-center col-12">
                 <h4>No products available.</h4>
               </div>
             )}

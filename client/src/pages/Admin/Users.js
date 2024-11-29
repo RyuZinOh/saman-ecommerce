@@ -41,7 +41,7 @@ const Users = () => {
     <Layout
       title="Dashboard - All Users - Saman"
       description="Manage and view all users in the admin dashboard. Access user data and perform actions on user accounts."
-      author="safal lama"
+      author="Safal Lama"
       keywords="Admin dashboard, users, user management, view users, manage accounts"
     >
       <div className="container-fluid m-3 p-3">
@@ -50,27 +50,42 @@ const Users = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1>All Users</h1>
+            <h1 className="mb-4">All Users</h1>
             {loading ? (
-              <p>Loading...</p>
+              <div className="text-center">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
             ) : error ? (
-              <p className="text-danger">{error}</p>
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
             ) : (
               <div className="table-responsive">
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Phone</th>
-                      <th>Address</th>
-                      <th>Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.length > 0 ? (
-                      users.map((user, index) => (
+                {users.length === 0 ? (
+                  <div className="card">
+                    <div className="card-body text-center">
+                      <h5 className="card-title">No Users Found</h5>
+                      <p className="card-text">
+                        There are currently no users to display.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <table className="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Role</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map((user, index) => (
                         <tr key={user._id}>
                           <td>{index + 1}</td>
                           <td>{user.name}</td>
@@ -83,16 +98,10 @@ const Users = () => {
                           </td>
                           <td>{user.role === 1 ? "Admin" : "User"}</td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-center">
-                          No users found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             )}
           </div>

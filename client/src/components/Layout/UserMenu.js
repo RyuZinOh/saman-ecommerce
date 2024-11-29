@@ -7,7 +7,7 @@ const UserMenu = () => {
       <div className="card shadow-lg rounded">
         <div className="card-body text-center">
           <h4 className="card-title mb-4">User Panel</h4>
-          <div className="list-group">
+          <div className="list-group position-sticky" style={{ top: "20px" }}>
             <NavLink
               to="/dashboard/user/profile"
               className="list-group-item list-group-item-action py-3 px-4 rounded mb-2 text-dark hover-effect"

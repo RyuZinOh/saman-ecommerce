@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Layout from "../components/Layout/Layout";
-import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import imagehome from "../assets/_saman.png";
-import imagehomeGif from "../assets/mobile-saman.gif";
+import imagehome1 from "../assets/_saman_1.png";
 import { Checkbox, Slider, Input, Button, Pagination, Spin } from "antd";
 import { SearchOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
@@ -22,7 +22,7 @@ const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
   const [loading, setLoading] = useState(false);
-  const [bannerImage, setBannerImage] = useState(imagehome);
+  const [bannerImages] = useState([imagehome, imagehome1]);
   const navigate = useNavigate();
 
   const getAllProducts = useCallback(async () => {
@@ -84,19 +84,6 @@ const HomePage = () => {
     setPriceRange(([min, max]) => [min, Math.max(max - 1000, 0)]);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setBannerImage(imagehomeGif);
-      } else {
-        setBannerImage(imagehome);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
     getAllProducts();
     getAllCategories();
   }, [getAllProducts, getAllCategories]);
@@ -109,22 +96,47 @@ const HomePage = () => {
   return (
     <Layout
       title="Saman - Home"
-      description="Discover the best products at affordable prices. Shop categories, filter by price, and find exactly what you need on My Website."
+      description="Discover the best products at affordable prices. Shop categories, filter by price, and find exactly what you need."
       keywords="products, shopping, affordable prices, categories, filters"
       author="safal lama"
     >
       <div
-        className="banner-container"
-        style={{
-          width: "100%",
-          height: "70vh",
-          backgroundImage: `url(${bannerImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          borderRadius: "10px",
-          marginBottom: "20px",
-        }}
-      />
+        id="carouselExampleCaptions"
+        className="carousel slide mb-4 shadow-lg"
+        data-bs-ride="carousel"
+      >
+        <div className="carousel-inner">
+          {bannerImages.map((image, index) => (
+            <div
+              key={index}
+              className={`carousel-item ${index === 0 ? "active" : ""}`}
+            >
+              <img
+                src={image}
+                className="d-block w-100"
+                alt={`banner-${index}`}
+                style={{ maxHeight: "80vh", objectFit: "cover" }}
+              />
+            </div>
+          ))}
+        </div>
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
+          <FaChevronLeft style={{ color: "black", fontSize: "2rem" }} />
+        </button>
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
+          <FaChevronRight style={{ color: "black", fontSize: "2rem" }} />
+        </button>
+      </div>
 
       <div className="row mt-2">
         <div className="col-md-3">
@@ -176,57 +188,61 @@ const HomePage = () => {
               <Spin size="large" />
             </div>
           ) : (
-            <div className="d-flex flex-wrap custom-padding-right">
+            <div className="d-flex flex-wrap">
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((product) => (
-                  <div key={product._id} className="card m-3 saitama-card">
-                    <img
-                      src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${product._id}`}
-                      className="card-img-top gojo-img"
-                      alt={product.name}
-                      loading="lazy"
-                    />
-                    <div className="card-body levi-body">
-                      <h5 className="card-title eren-title">{product.name}</h5>
-                      <p className="card-text mikasa-text">
-                        {product.description.substring(0, 30)}...
-                      </p>
-                      <p className="card-text text-success">₹{product.price}</p>
-                      <div className="d-flex justify-content-between">
-                        <Button
-                          type="primary"
-                          size="small"
-                          onClick={() => navigate(`/product/${product.slug}`)}
-                        >
-                          More Details
-                        </Button>
-                        <Button
-                          type="secondary"
-                          size="small"
-                          onClick={() => {
-                            if (!auth?.token) {
-                              toast.error(
-                                "Please log in to add items to the cart."
+                  <div key={product._id} className="col-md-4 mb-4">
+                    <div className="card h-100">
+                      <img
+                        src={`${process.env.REACT_APP_API_URL}/api/v1/product/product-photo/${product._id}`}
+                        className="card-img-top"
+                        alt={product.name}
+                        loading="lazy"
+                      />
+                      <div className="card-body d-flex flex-column">
+                        <h5 className="card-title">{product.name}</h5>
+                        <p className="card-text">
+                          {product.description.substring(0, 30)}...
+                        </p>
+                        <p className="card-text text-success">
+                          ₹{product.price}
+                        </p>
+                        <div className="d-flex justify-content-between mt-auto">
+                          <Button
+                            type="primary"
+                            size="small"
+                            onClick={() => navigate(`/product/${product.slug}`)}
+                          >
+                            More Details
+                          </Button>
+                          <Button
+                            type="secondary"
+                            size="small"
+                            onClick={() => {
+                              if (!auth?.token) {
+                                toast.error(
+                                  "Please log in to add items to the cart."
+                                );
+                                return;
+                              }
+                              const updatedCart = [...cart, product];
+                              setCart(updatedCart);
+                              localStorage.setItem(
+                                "cart",
+                                JSON.stringify(updatedCart)
                               );
-                              return;
-                            }
-                            const updatedCart = [...cart, product];
-                            setCart(updatedCart);
-                            localStorage.setItem(
-                              "cart",
-                              JSON.stringify(updatedCart)
-                            );
-                            toast.success("Added to cart successfully!");
-                          }}
-                        >
-                          Add to Cart
-                        </Button>
+                              toast.success("Added to cart successfully!");
+                            }}
+                          >
+                            Add to Cart
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center w-100">
+                <div className="col-12 text-center">
                   <h4>No products match the selected filters.</h4>
                 </div>
               )}
