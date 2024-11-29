@@ -46,26 +46,27 @@ const ForgetPassword = () => {
 
   return (
     <Layout
-      title="Forgot Password - saman"
+      title="Forgot Password - Saman"
       description="Reset your password for My Website."
     >
-      <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">
+      <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">
-              <h1 className="text-center mb-4">Forgot Password</h1>
               <form
                 onSubmit={handleSubmit}
-                className="p-4 shadow-lg"
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "15px",
-                  boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.1)",
-                }}
+                className="p-4 shadow-lg rounded-3 bg-white border"
+                style={{ minHeight: "400px" }} // Set form height to be taller
               >
+                <h1 className="text-center mb-4">Forgot Password</h1>{" "}
+                {/* Moved the heading inside the form */}
+                {/* Email Input */}
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    <FaEnvelope className="me-2 text-dark" />
+                  <label
+                    htmlFor="email"
+                    className="form-label d-flex align-items-center text-dark"
+                  >
+                    <FaEnvelope className="me-2" />
                     Email
                   </label>
                   <input
@@ -75,15 +76,15 @@ const ForgetPassword = () => {
                     value={email}
                     onChange={handleChange}
                     placeholder="Enter your email"
-                    style={{
-                      borderRadius: "8px",
-                      border: "1px solid #ddd",
-                    }}
                   />
                 </div>
+                {/* Security Answer Input */}
                 <div className="mb-3">
-                  <label htmlFor="fpassA" className="form-label">
-                    <FaQuestion className="me-2 text-dark" />
+                  <label
+                    htmlFor="fpassA"
+                    className="form-label d-flex align-items-center text-dark"
+                  >
+                    <FaQuestion className="me-2" />
                     Security Answer
                   </label>
                   <input
@@ -93,14 +94,11 @@ const ForgetPassword = () => {
                     value={fpassA}
                     onChange={handleChange}
                     placeholder="Who is your favorite waifu in anime?"
-                    style={{
-                      borderRadius: "8px",
-                      border: "1px solid #ddd",
-                    }}
                   />
                 </div>
+                {/* New Password Input */}
                 <div className="mb-3">
-                  <label htmlFor="newPassword" className="form-label">
+                  <label htmlFor="newPassword" className="form-label text-dark">
                     New Password
                   </label>
                   <input
@@ -110,23 +108,12 @@ const ForgetPassword = () => {
                     value={newPassword}
                     onChange={handleChange}
                     placeholder="Enter your new password"
-                    style={{
-                      borderRadius: "8px",
-                      border: "1px solid #ddd",
-                    }}
                   />
                 </div>
+                {/* Reset Password Button */}
                 <button
                   type="submit"
-                  className="btn w-100 mt-3 shadow"
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid black",
-                    borderRadius: "8px",
-                    transition: "background-color 0.3s, color 0.3s",
-                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                  }}
+                  className="btn btn-dark w-100 mt-3" // Set button color to black
                 >
                   Reset Password
                 </button>

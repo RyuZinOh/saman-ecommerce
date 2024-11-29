@@ -77,37 +77,33 @@ const Register = () => {
       author="safal lama"
       keywords="register, sign up, user account"
     >
-      <div className="register d-flex justify-content-center align-items-center min-vh-100 bg-white">
+      <div className="register d-flex justify-content-center align-items-center min-vh-100 bg-light">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">
-              <h1 className="text-center mb-4">Registration</h1>
               <form
                 onSubmit={handleSubmit}
-                className="p-4 shadow-lg"
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "15px",
-                  boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.1)",
-                }}
+                className="p-4 shadow-lg rounded-3 bg-white border"
+                style={{ minHeight: "500px" }} // Set a minimum height for the form
               >
+                <h1 className="text-center mb-4">Registration</h1>{" "}
+                {/* Heading inside the form */}
+                {/* Loop over the form fields and render input components */}
                 {[
-                  "name",
-                  "email",
-                  "password",
-                  "phone",
-                  "address",
-                  "fpassA",
-                ].map((field) => (
+                  { field: "name", label: "Name" },
+                  { field: "email", label: "Email" },
+                  { field: "password", label: "Password" },
+                  { field: "phone", label: "Phone" },
+                  { field: "address", label: "Address" },
+                  { field: "fpassA", label: "Security Question Answer" }, // Custom label for the last field
+                ].map(({ field, label }) => (
                   <div className="mb-3" key={field}>
                     <label
                       htmlFor={field}
-                      className="form-label d-flex align-items-center"
+                      className="form-label d-flex align-items-center text-dark"
                     >
                       {iconMapping[field]}
-                      {field === "fpassA"
-                        ? "Who is your favorite waifu in anime?"
-                        : field.charAt(0).toUpperCase() + field.slice(1)}
+                      {label}
                     </label>
                     <input
                       type={field === "password" ? "password" : "text"}
@@ -115,36 +111,12 @@ const Register = () => {
                       id={field}
                       value={formData[field]}
                       onChange={handleChange}
-                      placeholder={`Enter your ${
-                        field === "fpassA" ? "answer to the question" : field
-                      }`}
-                      style={{
-                        borderRadius: "8px",
-                        border: "1px solid #ddd",
-                      }}
+                      placeholder={`Enter your ${label.toLowerCase()}`}
                     />
                   </div>
                 ))}
-                <button
-                  type="submit"
-                  className="btn w-100 mt-3 shadow"
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid black",
-                    borderRadius: "8px",
-                    transition: "background-color 0.3s, color 0.3s",
-                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = "black";
-                    e.currentTarget.style.color = "white";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
-                    e.currentTarget.style.color = "black";
-                  }}
-                >
+                {/* Register Button */}
+                <button type="submit" className="btn btn-dark w-100 mt-3">
                   Register
                 </button>
               </form>

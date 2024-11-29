@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Layout from "../../components/Layout/Layout";
-import { FaEnvelope, FaLock } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"; // Imported eye icons
 import { useAuth } from "../../context/auth";
 
 const Login = () => {
@@ -11,6 +11,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // New state for toggling password visibility
   const { email, password } = formData;
 
   const { setAuth } = useAuth();
@@ -64,26 +65,24 @@ const Login = () => {
       author="safal lama"
       keywords="login, user account"
     >
-      <div className="d-flex justify-content-center align-items-center min-vh-100 bg-white">
+      <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-6 col-md-8">
-              <h1 className="text-center mb-4">Login</h1>
               <form
                 onSubmit={handleSubmit}
-                className="p-4 shadow-lg"
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "15px",
-                  boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.1)",
-                }}
+                className="p-4 shadow-lg rounded-3 bg-white border"
+                style={{ minHeight: "400px" }} // Set form height to be taller
               >
+                <h1 className="text-center mb-4">Login</h1>{" "}
+                {/* Moved the heading inside the form */}
+                {/* Email Input */}
                 <div className="mb-3">
                   <label
                     htmlFor="email"
-                    className="form-label d-flex align-items-center"
+                    className="form-label d-flex align-items-center text-dark"
                   >
-                    <FaEnvelope className="me-2 text-dark" />
+                    <FaEnvelope className="me-2" />
                     Email
                   </label>
                   <input
@@ -93,57 +92,50 @@ const Login = () => {
                     value={email}
                     onChange={handleChange}
                     placeholder="Enter your email"
-                    style={{
-                      borderRadius: "8px",
-                      border: "1px solid #ddd",
-                    }}
                   />
                 </div>
-                <div className="mb-3">
+                {/* Password Input */}
+                <div className="mb-3 position-relative">
                   <label
                     htmlFor="password"
-                    className="form-label d-flex align-items-center"
+                    className="form-label d-flex align-items-center text-dark"
                   >
-                    <FaLock className="me-2 text-dark" />
+                    <FaLock className="me-2" />
                     Password
                   </label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"} // Toggle password visibility
                     className="form-control"
                     id="password"
                     value={password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    style={{
-                      borderRadius: "8px",
-                      border: "1px solid #ddd",
-                    }}
                   />
+                  <button
+                    type="button"
+                    className="btn btn-link position-absolute end-0 top-50 translate-middle-y"
+                    onClick={() => setShowPassword(!showPassword)} // Toggle the showPassword state
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash className="text-dark" /> // Show the eye-slash icon when password is visible
+                    ) : (
+                      <FaEye className="text-dark" /> // Show the eye icon when password is hidden
+                    )}
+                  </button>
                 </div>
+                {/* Login Button */}
                 <button
                   type="submit"
-                  className="btn w-100 mt-3 shadow"
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid black",
-                    borderRadius: "8px",
-                    transition: "background-color 0.3s, color 0.3s",
-                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = "black";
-                    e.currentTarget.style.color = "white";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
-                    e.currentTarget.style.color = "black";
-                  }}
+                  className="btn btn-dark w-100 mt-3" // Set button color to black
                 >
                   Login
                 </button>
+                {/* Forgot Password Link */}
                 <div className="text-center mt-3">
-                  <Link to="/forget-password" className="text-primary">
+                  <Link
+                    to="/forget-password"
+                    className="text-decoration-none text-primary"
+                  >
                     Forgot Password?
                   </Link>
                 </div>
