@@ -137,7 +137,7 @@ const Footer = () => {
           <p className="mb-0">&copy; 2024 Saman. All Rights Reserved.</p>
           <div className="mt-3">
             <a
-              href="https://github.com/saman"
+              href="https://github.com/ryuzinoh"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white mx-2 text-decoration-none"
@@ -145,7 +145,7 @@ const Footer = () => {
               <FaGithub size={24} />
             </a>
             <a
-              href="https://twitter.com/saman"
+              href="https://twitter.com/yoyuehappy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white mx-2 text-decoration-none"
@@ -153,7 +153,7 @@ const Footer = () => {
               <RiTwitterXFill size={24} />
             </a>
             <a
-              href="https://www.facebook.com/saman"
+              href="https://www.facebook.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white mx-2 text-decoration-none"
@@ -161,7 +161,7 @@ const Footer = () => {
               <FaFacebook size={24} />
             </a>
             <a
-              href="https://www.instagram.com/saman"
+              href="https://www.instagram.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white mx-2 text-decoration-none"
