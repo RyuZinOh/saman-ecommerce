@@ -8,10 +8,12 @@ import {
   PhoneCall,
 } from "@phosphor-icons/react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../../manager/contexts/auth/useAuth";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartItems] = useState(3);
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Predefined navigation links
   const navLinks = [
@@ -44,7 +46,7 @@ const Header = () => {
       </div>
 
       {/* Main Header - Sticky */}
-      <header className="bg-white  sticky top-0 z-50">
+      <header className="bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -86,20 +88,48 @@ const Header = () => {
                   </span>
                 )}
               </button>
-              <div className="hidden lg:flex items-center space-x-2">
-                <Link
-                  to="/account"
-                  className="p-2 text-gray-700 hover:text-indigo-600"
-                >
-                  <User size={20} weight="bold" />
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
-                >
-                  Register
-                </Link>
+
+              {/* User Account Section */}
+              <div className="hidden lg:flex items-center space-x-4">
+                {isAuthenticated ? (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <Link
+                        to="/account"
+                        className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600"
+                      >
+                        <User size={20} weight="bold" />
+                        <span className="text-sm">
+                          {user?.name || user?.email.split("@")[0]}
+                        </span>
+                      </Link>
+                    </div>
+                    <button
+                      onClick={logout}
+                      className="px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="px-3 py-1 text-gray-700 hover:text-indigo-600 text-sm"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
+
+              {/* Mobile Menu Button */}
               <button
                 className="p-2 text-gray-700 hover:text-indigo-600 lg:hidden"
                 onClick={toggleMenu}
@@ -133,13 +163,45 @@ const Header = () => {
                     {link.name}
                   </NavLink>
                 ))}
-                <Link
-                  to="/register"
-                  className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-center"
-                  onClick={toggleMenu}
-                >
-                  Register
-                </Link>
+
+                {/* Mobile Auth Links */}
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/account"
+                      className="mt-2 px-4 py-2 text-gray-700 hover:text-indigo-600 border rounded text-center"
+                      onClick={toggleMenu}
+                    >
+                      My Account
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        toggleMenu();
+                      }}
+                      className="mt-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-center"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="mt-4 px-4 py-2 text-indigo-600 border border-indigo-600 rounded hover:bg-indigo-50 text-center"
+                      onClick={toggleMenu}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-center"
+                      onClick={toggleMenu}
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
           )}
