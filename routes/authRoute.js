@@ -22,7 +22,7 @@ router.post("/register", registerController);
 router.post("/login", loginController);
 
 // forget password
-router.post("/forget_password", forgetPassController);
+router.post("/forgot-password", forgetPassController);
 // Testing route
 router.get("/test", requireSignIn, isAdmin, testController);
 
