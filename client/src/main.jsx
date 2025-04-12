@@ -3,7 +3,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthProvider } from "./manager/contexts/auth/AuthProvider.jsx";
+import { AuthProvider } from "./manager/contexts/Auth/AuthProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <>
