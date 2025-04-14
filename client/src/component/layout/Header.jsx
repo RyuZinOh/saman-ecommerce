@@ -11,7 +11,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../manager/contexts/auth/useAuth";
 
-// Constants 
+// Constants
 const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Shop", path: "/shop" },
@@ -39,73 +39,84 @@ const NotificationBar = memo(() => (
 ));
 
 const UserDropdown = memo(
-  ({ isOpen, toggleDropdown, user, logout, dropdownRef }) => (
-    <div className="hidden lg:block relative" ref={dropdownRef}>
-      {user ? (
-        <div className="flex items-center">
-          <button
-            onClick={toggleDropdown}
-            className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors"
-          >
-            <User size={20} weight="bold" />
-            <span className="text-sm">
-              {user.name || user.email.split("@")[0]}
-            </span>
-            <CaretDown
-              size={16}
-              weight="bold"
-              className={`transition-transform duration-200 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+  ({ isOpen, toggleDropdown, user, logout, dropdownRef }) => {
+    const handleDashboardClick = (e) => {
+      e.stopPropagation();
+      if (user && user.role === 1) {
+        // Admin Redirect
+        window.location.href = "/admin-dashboard";
+      } else {
+        // Regular User Redirect
+        window.location.href = "/dashboard";
+      }
+      toggleDropdown();
+    };
 
-          <div
-            className={`absolute mt-35 w-40 bg-white rounded-md  py-1 z-50 border border-gray-200 transition-all duration-200 ${
-              isOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-1 pointer-events-none"
-            }`}
-          >
-            <Link
-              to="/dashboard"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              Dashboard
-            </Link>
+    return (
+      <div className="hidden lg:block relative" ref={dropdownRef}>
+        {user ? (
+          <div className="flex items-center">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                logout();
-                toggleDropdown(); 
-              }}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              onClick={toggleDropdown}
+              className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors"
             >
-              Logout
+              <User size={20} weight="bold" />
+              <span className="text-sm">
+                {user.name || user.email.split("@")[0]}
+              </span>
+              <CaretDown
+                size={16}
+                weight="bold"
+                className={`transition-transform duration-200 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
+
+            <div
+              className={`absolute mt-35 w-40 bg-white rounded-md  py-1 z-50 border border-gray-200 transition-all duration-200 ${
+                isOpen
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-1 pointer-events-none"
+              }`}
+            >
+              <button
+                onClick={handleDashboardClick}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  logout();
+                  toggleDropdown();
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex space-x-2">
-          <Link
-            to="/login"
-            className="px-3 py-1 text-gray-700 hover:text-indigo-600 text-sm transition-colors"
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm transition-colors"
-          >
-            Register
-          </Link>
-        </div>
-      )}
-    </div>
-  )
+        ) : (
+          <div className="flex space-x-2">
+            <Link
+              to="/login"
+              className="px-3 py-1 text-gray-700 hover:text-indigo-600 text-sm transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm transition-colors"
+            >
+              Register
+            </Link>
+          </div>
+        )}
+      </div>
+    );
+  }
 );
 
 const MobileMenu = memo(
@@ -178,11 +189,10 @@ const MobileMenu = memo(
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [cartItems] = useState(3); 
+  const [cartItems] = useState(3);
   const { user, isAuthenticated, logout } = useAuth();
   const dropdownRef = useRef(null);
 
-  // Close mobile menu when window resizes to desktop view
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024 && isMenuOpen) {
@@ -208,7 +218,6 @@ const Header = () => {
               Saman
             </Link>
 
-            {/* Desktop */}
             <nav className="hidden lg:flex space-x-8">
               {NAV_LINKS.map((link) => (
                 <NavLink
@@ -240,7 +249,6 @@ const Header = () => {
                 )}
               </button>
 
-              {/* User Account Section */}
               <UserDropdown
                 isOpen={isUserDropdownOpen}
                 toggleDropdown={toggleUserDropdown}
@@ -249,7 +257,6 @@ const Header = () => {
                 dropdownRef={dropdownRef}
               />
 
-              {/* Mobile */}
               <button
                 className="p-2 text-gray-700 hover:text-indigo-600 lg:hidden transition-colors"
                 onClick={toggleMenu}
