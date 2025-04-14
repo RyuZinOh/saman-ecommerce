@@ -1,7 +1,10 @@
+import { useAuth } from "../manager/contexts/auth/useAuth";
 import Layout from "./layout/Layout";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
+  const { user, token } = useAuth();
+
   return (
     <Layout
       title="Saman by Safal Lama - Authentic Handmade Crafts & Gifts"
@@ -9,7 +12,6 @@ const HomePage = () => {
       keywords="Nepali handicrafts, handmade gifts, ethical shopping, Safal Lama products, traditional Nepali crafts, fair trade Nepal"
       canonicalUrl="/"
     >
-      {/* Hero Section */}
       <div className="bg-white pt-12 md:pt-16 pl-4 sm:pl-6 lg:pl-8">
         <div className="text-left">
           <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
@@ -19,6 +21,35 @@ const HomePage = () => {
             Authentic handcrafted treasures from Nepal, ethically made with care
             and tradition.
           </p>
+
+          {/* Show user info if logged in */}
+          {user && (
+            <div className="mt-6 bg-gray-50 p-4 rounded shadow-md max-w-md">
+              <h2 className="text-xl font-semibold mb-2">Your Info:</h2>
+              <p>
+                <strong>ID:</strong> {user._id}
+              </p>
+              <p>
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email}
+              </p>
+              <p>
+                <strong>Address:</strong> {user.address}
+              </p>
+              <p>
+                <strong>Phone:</strong> {user.phone}
+              </p>
+              <p>
+                <strong>Role:</strong> {user.role}
+              </p>
+              <p>
+                <strong>Token:</strong> {token}
+              </p>
+            </div>
+          )}
+
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
               to="/shop"

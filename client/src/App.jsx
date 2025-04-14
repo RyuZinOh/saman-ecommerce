@@ -5,6 +5,8 @@ import Register from "./component/gate/Register";
 import ForgotPassword from "./component/gate/ForgetPassword";
 import Dashboard from "./component/user/general/Dashboard";
 import PrivateRoute from "./protection/PrivateRoute";
+import AdminRoute from "./protection/Adminroute";
+import AdminDashboard from "./component/user/admin/AdminDashboard";
 
 function App() {
   return (
@@ -14,9 +16,25 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route element={<PrivateRoute />}>
-        <Route path="/dashboard" element={<Dashboard/>}/>
-     </Route>
+
+        {/* Protected Route user */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        {/* Protected Route admin */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </Router>
   );

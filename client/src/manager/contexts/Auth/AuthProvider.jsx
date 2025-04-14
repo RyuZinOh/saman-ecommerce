@@ -10,9 +10,11 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
 
   const login = (userData, token) => {
-    setUser(userData);
+    const { _id, name, email, phone, address, role } = userData;
+    const minimalUserData = { _id, name, email, phone, address, role };
+    setUser(minimalUserData);
     setToken(token);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(minimalUserData));
     localStorage.setItem("token", token);
   };
 
@@ -23,11 +25,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
+  const updateUser = (updatedData) => {
+    const updatedUser = { ...user, ...updatedData };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
     token,
     login,
     logout,
+    updateUser,
     isAuthenticated: !!user,
   };
 
