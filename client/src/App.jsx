@@ -7,6 +7,7 @@ import Dashboard from "./component/user/general/Dashboard";
 import PrivateRoute from "./protection/PrivateRoute";
 import AdminRoute from "./protection/Adminroute";
 import AdminDashboard from "./component/user/admin/AdminDashboard";
+import AdminLayout from "./component/layout/AdminLayout";
 
 function App() {
   return (
@@ -27,14 +28,9 @@ function App() {
           }
         />
         {/* Protected Route admin */}
-        <Route
-          path="/admin-dashboard"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
+        <Route path="/admin-dashboard" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </Router>
   );
