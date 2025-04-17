@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, memo } from "react";
+import { useState, useRef, useEffect, memo, useCallback } from "react";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import {
   ShoppingCart,
   MagnifyingGlass,
@@ -8,29 +9,28 @@ import {
   PhoneCall,
   CaretDown,
 } from "@phosphor-icons/react";
-import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../manager/contexts/auth/useAuth";
 
 // Constants
-const NAV_LINKS = [
+const NAV_LINKS = Object.freeze([
   { name: "Home", path: "/" },
   { name: "Shop", path: "/shop" },
   { name: "Categories", path: "/categories" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
-];
+]);
 
-const NOTIFICATION_BAR = {
+const NOTIFICATION_BAR = Object.freeze({
   phone: "+977 9814202188",
   promotion: "noEvent currently!",
-};
+});
 
-// Separate components of upnav
+// Memoized Components
 const NotificationBar = memo(() => (
   <div className="bg-indigo-800 text-white text-sm">
     <div className="container mx-auto px-4 py-1 flex justify-between items-center">
       <div className="flex items-center space-x-2">
-        <PhoneCall size={14} weight="bold" />
+        <PhoneCall size={14} weight="bold" aria-hidden="true" />
         <span>{NOTIFICATION_BAR.phone}</span>
       </div>
       <div className="font-medium">{NOTIFICATION_BAR.promotion}</div>
@@ -38,160 +38,191 @@ const NotificationBar = memo(() => (
   </div>
 ));
 
-const UserDropdown = memo(
-  ({ isOpen, toggleDropdown, user, logout, dropdownRef }) => {
-    const handleDashboardClick = (e) => {
+const UserDropdown = memo(({ isOpen, toggleDropdown, user, logout }) => {
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  const handleDashboardClick = useCallback(
+    (e) => {
       e.stopPropagation();
-      if (user && user.role === 1) {
-        // Admin Redirect
-        window.location.href = "/admin-dashboard";
-      } else {
-        // Regular User Redirect
-        window.location.href = "/dashboard";
-      }
+      navigate(user?.role === 1 ? "/admin-dashboard" : "/dashboard");
       toggleDropdown();
+    },
+    [navigate, user?.role, toggleDropdown]
+  );
+
+  const handleLogoutClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      logout();
+      toggleDropdown();
+    },
+    [logout, toggleDropdown]
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        toggleDropdown(false);
+      }
     };
 
-    return (
-      <div className="hidden lg:block relative" ref={dropdownRef}>
-        {user ? (
-          <div className="flex items-center">
-            <button
-              onClick={toggleDropdown}
-              className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              <User size={20} weight="bold" />
-              <span className="text-sm">
-                {user.name || user.email.split("@")[0]}
-              </span>
-              <CaretDown
-                size={16}
-                weight="bold"
-                className={`transition-transform duration-200 ${
-                  isOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [toggleDropdown]);
 
-            <div
-              className={`absolute mt-35 w-40 bg-white rounded-md  py-1 z-50 border border-gray-200 transition-all duration-200 ${
-                isOpen
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-1 pointer-events-none"
+  return (
+    <div className="hidden lg:block relative" ref={dropdownRef}>
+      {user ? (
+        <div className="flex items-center">
+          <button
+            onClick={() => toggleDropdown(!isOpen)}
+            className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 transition-colors"
+            aria-expanded={isOpen}
+            aria-haspopup="true"
+          >
+            <User size={20} weight="bold" aria-hidden="true" />
+            <span className="text-sm">
+              {user.name || user.email.split("@")[0]}
+            </span>
+            <CaretDown
+              size={16}
+              weight="bold"
+              className={`transition-transform duration-200 ${
+                isOpen ? "rotate-180" : ""
               }`}
+              aria-hidden="true"
+            />
+          </button>
+
+          <div
+            className={`absolute mt-38 w-40 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200 transition-all duration-200 ${
+              isOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-1 pointer-events-none"
+            }`}
+            role="menu"
+          >
+            <button
+              onClick={handleDashboardClick}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              role="menuitem"
             >
-              <button
-                onClick={handleDashboardClick}
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  logout();
-                  toggleDropdown();
-                }}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
+              Dashboard
+            </button>
+            <button
+              onClick={handleLogoutClick}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              role="menuitem"
+            >
+              Logout
+            </button>
           </div>
+        </div>
+      ) : (
+        <div className="flex space-x-2">
+          <Link
+            to="/login"
+            className="px-3 py-1 text-gray-700 hover:text-indigo-600 text-sm transition-colors"
+          >
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm transition-colors"
+          >
+            Register
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+});
+
+const MobileMenu = memo(({ isOpen, toggleMenu, isAuthenticated, logout }) => {
+  const navigate = useNavigate();
+
+  const handleDashboardClick = useCallback(() => {
+    navigate("/dashboard");
+    toggleMenu();
+  }, [navigate, toggleMenu]);
+
+  const handleLogoutClick = useCallback(() => {
+    logout();
+    toggleMenu();
+  }, [logout, toggleMenu]);
+
+  if (!isOpen) return null;
+
+  return (
+    <nav className="lg:hidden py-4 border-t mt-3" aria-label="Mobile menu">
+      <div className="flex flex-col space-y-3">
+        {NAV_LINKS.map((link) => (
+          <NavLink
+            key={link.path}
+            to={link.path}
+            className={({ isActive }) =>
+              `font-medium py-2 transition-colors ${
+                isActive
+                  ? "text-indigo-600 font-semibold"
+                  : "text-gray-700 hover:text-indigo-600"
+              }`
+            }
+            onClick={toggleMenu}
+            end
+          >
+            {link.name}
+          </NavLink>
+        ))}
+
+        {isAuthenticated ? (
+          <>
+            <button
+              onClick={handleDashboardClick}
+              className="mt-2 px-4 py-2 text-gray-700 hover:text-indigo-600 border rounded text-center transition-colors"
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={handleLogoutClick}
+              className="mt-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-center transition-colors"
+            >
+              Logout
+            </button>
+          </>
         ) : (
-          <div className="flex space-x-2">
+          <>
             <Link
               to="/login"
-              className="px-3 py-1 text-gray-700 hover:text-indigo-600 text-sm transition-colors"
+              className="mt-4 px-4 py-2 text-indigo-600 border border-indigo-600 rounded hover:bg-indigo-50 text-center transition-colors"
+              onClick={toggleMenu}
             >
               Login
             </Link>
             <Link
               to="/register"
-              className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm transition-colors"
+              className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-center transition-colors"
+              onClick={toggleMenu}
             >
               Register
             </Link>
-          </div>
+          </>
         )}
       </div>
-    );
-  }
-);
-
-const MobileMenu = memo(
-  ({ isOpen, toggleMenu, navLinks, isAuthenticated, logout }) => {
-    if (!isOpen) return null;
-
-    return (
-      <nav className="lg:hidden py-4 border-t mt-3">
-        <div className="flex flex-col space-y-3">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                `font-medium py-2 transition-colors ${
-                  isActive
-                    ? "text-indigo-600 font-semibold"
-                    : "text-gray-700 hover:text-indigo-600"
-                }`
-              }
-              onClick={toggleMenu}
-            >
-              {link.name}
-            </NavLink>
-          ))}
-
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/dashboard"
-                className="mt-2 px-4 py-2 text-gray-700 hover:text-indigo-600 border rounded text-center transition-colors"
-                onClick={toggleMenu}
-              >
-                Dashboard
-              </Link>
-              <button
-                onClick={() => {
-                  logout();
-                  toggleMenu();
-                }}
-                className="mt-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-center transition-colors"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="mt-4 px-4 py-2 text-indigo-600 border border-indigo-600 rounded hover:bg-indigo-50 text-center transition-colors"
-                onClick={toggleMenu}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-center transition-colors"
-                onClick={toggleMenu}
-              >
-                Register
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-    );
-  }
-);
+    </nav>
+  );
+});
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [cartItems] = useState(3);
   const { user, isAuthenticated, logout } = useAuth();
-  const dropdownRef = useRef(null);
+
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+  const toggleUserDropdown = useCallback(
+    () => setIsUserDropdownOpen((prev) => !prev),
+    []
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -204,32 +235,34 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMenuOpen]);
 
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
-  const toggleUserDropdown = () => setIsUserDropdownOpen((prev) => !prev);
-
   return (
     <>
       <NotificationBar />
-
-      <header className="bg-white sticky top-0 z-50 ">
+      <header className="bg-white sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-2xl font-bold text-indigo-600">
-              Saman
-            </Link>
+            <div
+              className="text-2xl font-bold text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            >
+              SAMAN
+            </div>
 
-            <nav className="hidden lg:flex space-x-8">
+            <nav
+              className="hidden lg:flex space-x-8"
+              aria-label="Main navigation"
+            >
               {NAV_LINKS.map((link) => (
                 <NavLink
-                  key={link.name}
+                  key={link.path}
                   to={link.path}
                   className={({ isActive }) =>
-                    `font-medium transition-colors ${
+                    `font-medium transition-colors px-1 py-2 ${
                       isActive
                         ? "text-indigo-600 border-b-2 border-indigo-600"
                         : "text-gray-700 hover:text-indigo-600"
                     }`
                   }
+                  end
                 >
                   {link.name}
                 </NavLink>
@@ -237,14 +270,21 @@ const Header = () => {
             </nav>
 
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-700 hover:text-indigo-600 transition-colors">
-                <MagnifyingGlass size={20} weight="bold" />
+              <button
+                className="p-2 text-gray-700 hover:text-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+                aria-label="Search"
+              >
+                <MagnifyingGlass size={20} weight="bold" aria-hidden="true" />
               </button>
-              <button className="p-2 text-gray-700 hover:text-indigo-600 relative transition-colors">
-                <ShoppingCart size={20} weight="bold" />
-                {cartItems > 0 && (
+
+              <button
+                className="p-2 text-gray-700 hover:text-indigo-600 relative transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+                aria-label="Cart"
+              >
+                <ShoppingCart size={20} weight="bold" aria-hidden="true" />
+                {isAuthenticated && (
                   <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItems}
+                    3
                   </span>
                 )}
               </button>
@@ -254,18 +294,18 @@ const Header = () => {
                 toggleDropdown={toggleUserDropdown}
                 user={isAuthenticated ? user : null}
                 logout={logout}
-                dropdownRef={dropdownRef}
               />
 
               <button
-                className="p-2 text-gray-700 hover:text-indigo-600 lg:hidden transition-colors"
+                className="p-2 text-gray-700 hover:text-indigo-600 lg:hidden transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
                 onClick={toggleMenu}
                 aria-label="Toggle menu"
+                aria-expanded={isMenuOpen}
               >
                 {isMenuOpen ? (
-                  <X size={20} weight="bold" />
+                  <X size={20} weight="bold" aria-hidden="true" />
                 ) : (
-                  <List size={20} weight="bold" />
+                  <List size={20} weight="bold" aria-hidden="true" />
                 )}
               </button>
             </div>
@@ -274,7 +314,6 @@ const Header = () => {
           <MobileMenu
             isOpen={isMenuOpen}
             toggleMenu={toggleMenu}
-            navLinks={NAV_LINKS}
             isAuthenticated={isAuthenticated}
             logout={logout}
           />
