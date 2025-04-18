@@ -9,6 +9,7 @@ import AdminDashboard from "./component/user/admin/AdminDashboard";
 import AdminLayout from "./component/layout/AdminLayout";
 import UserLayout from "./component/layout/UserLayout";
 import Dashboard from "./component/user/general/Dashboard";
+import NotFoundPage from "./component/404";
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
         >
           <Route index element={<AdminDashboard />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
