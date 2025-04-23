@@ -10,6 +10,7 @@ import AdminLayout from "./component/layout/AdminLayout";
 import UserLayout from "./component/layout/UserLayout";
 import Dashboard from "./component/user/general/Dashboard";
 import NotFoundPage from "./component/404";
+import CreateCategory from "./component/user/admin/CreateCategory";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             </AdminRoute>
           }
         >
+          <Route path="create-category" element={<CreateCategory/>} />
           <Route index element={<AdminDashboard />} />
         </Route>
 
