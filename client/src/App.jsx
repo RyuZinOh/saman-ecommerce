@@ -10,7 +10,8 @@ import AdminLayout from "./component/layout/AdminLayout";
 import UserLayout from "./component/layout/UserLayout";
 import Dashboard from "./component/user/general/Dashboard";
 import NotFoundPage from "./component/404";
-import CategoryForm from "./component/user/admin/CategoryForm";
+import CategoryManager from "./component/user/admin/CategoryManager";
+import ProductManager from "./component/user/admin/ProductManager";
 
 function App() {
   return (
@@ -43,7 +44,8 @@ function App() {
             </AdminRoute>
           }
         >
-          <Route path="create-category" element={<CategoryForm/>} />
+          <Route path="create-category" element={<CategoryManager/>} />
+          <Route path="create-product" element={<ProductManager />} />
           <Route index element={<AdminDashboard />} />
         </Route>
 
