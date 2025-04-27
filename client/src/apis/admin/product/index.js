@@ -32,3 +32,50 @@ export const createProduct = async (productData, token) => {
     throw new Error(errorMessage);
   }
 };
+
+// Get all products
+export const getProductController = async () => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/api/v1/product/get-product`
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to fetch products";
+    throw new Error(errorMessage);
+  }
+};
+
+// Get single product
+export const gettinSingleProduct = async (slugOrId) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/api/v1/product/get-product/${slugOrId}`
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to fetch product";
+    throw new Error(errorMessage);
+  }
+};
+
+// Delete product
+export const deleteProduct = async (productId, token) => {
+  try {
+    const { data } = await axios.delete(
+      `${API_BASE_URL}/api/v1/product/product-delete/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to delete product";
+    throw new Error(errorMessage);
+  }
+};

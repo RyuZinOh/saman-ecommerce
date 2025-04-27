@@ -12,6 +12,8 @@ import Dashboard from "./component/user/general/Dashboard";
 import NotFoundPage from "./component/404";
 import CategoryManager from "./component/user/admin/CategoryManager";
 import ProductManager from "./component/user/admin/ProductManager";
+import Products from "./component/user/admin/Products";
+import ViewProduct from "./component/user/admin/ViewProduct";
 
 function App() {
   return (
@@ -44,8 +46,11 @@ function App() {
             </AdminRoute>
           }
         >
-          <Route path="create-category" element={<CategoryManager/>} />
+          <Route path="create-category" element={<CategoryManager />} />
           <Route path="create-product" element={<ProductManager />} />
+          <Route path="products" element={<Products />} />
+
+          <Route path="product/:slug" element={<ViewProduct />} />
           <Route index element={<AdminDashboard />} />
         </Route>
 
