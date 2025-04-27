@@ -36,7 +36,7 @@ router.get("/product-photo/:pidP", sniper);
 //dwlwting
 router.delete("/product-delete/:pidP", requireSignIn, isAdmin, pdeleter);
 
-//u[dtaing
+//updtaing
 router.put(
   "/update-product/:pidP",
   requireSignIn,

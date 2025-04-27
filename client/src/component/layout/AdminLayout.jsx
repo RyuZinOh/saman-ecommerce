@@ -1,7 +1,15 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { DotsThree, X, User, House, Plus } from "@phosphor-icons/react";
+import {
+  DotsThree,
+  X,
+  User,
+  House,
+  ShoppingBag,
+  JarLabel,
+  Bag,
+} from "@phosphor-icons/react";
 import Layout from "./Layout";
 
 const AdminLayout = ({ ...props }) => {
@@ -28,15 +36,21 @@ const AdminLayout = ({ ...props }) => {
       icon: <House size={20} />,
     },
     { path: "#", label: "Users", icon: <User size={20} /> },
+
+    {
+      path: "/admin-dashboard/products",
+      label: "Products",
+      icon: <ShoppingBag size={20} />,
+    },
     {
       path: "/admin-dashboard/create-category",
       label: "Create Category",
-      icon: <Plus size={20} />,
+      icon: <JarLabel size={20} />,
     },
     {
       path: "/admin-dashboard/create-product",
       label: "Create Product",
-      icon: <Plus size={20} />,
+      icon: <Bag size={20} />,
     },
   ];
 
