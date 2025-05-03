@@ -1,22 +1,34 @@
 import { useState, useEffect } from "react";
-import { createProduct } from "../../../apis/admin/product";
+import { createProduct, } from "../../../apis/admin/product";
 import { getAllCategories } from "../../../apis/admin/category";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../manager/contexts/auth/useAuth";
 
-const ProductManager = () => {
+const ProductManager = ({ isEditMode = false, initialProduct = null, onSubmit, onCancel }) => {
   const { token } = useAuth();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "",
-    quantity: "",
-    shipping: false,
-    photo: null,
-  });
+  const [product, setProduct] = useState(
+    isEditMode && initialProduct
+      ? {
+          name: initialProduct.name,
+          description: initialProduct.description,
+          price: initialProduct.price,
+          category: initialProduct.category?._id || initialProduct.category,
+          quantity: initialProduct.quantity,
+          shipping: initialProduct.shipping,
+          photo: null,
+        }
+      : {
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+          quantity: "",
+          shipping: false,
+          photo: null,
+        }
+  );
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -51,21 +63,27 @@ const ProductManager = () => {
 
     setLoading(true);
     try {
-      const { success, message } = await createProduct(product, token);
-      if (success) {
-        toast.success(message);
-        setProduct({
-          name: "",
-          description: "",
-          price: "",
-          category: "",
-          quantity: "",
-          shipping: false,
-          photo: null,
-        });
+      if (isEditMode) {
+        // If in edit mode, call the passed onSubmit function
+        await onSubmit(product);
+      } else {
+        // If in create mode, proceed as before
+        const { success, message } = await createProduct(product, token);
+        if (success) {
+          toast.success(message);
+          setProduct({
+            name: "",
+            description: "",
+            price: "",
+            category: "",
+            quantity: "",
+            shipping: false,
+            photo: null,
+          });
+        }
       }
     } catch (error) {
-      toast.error(error.message || "Failed to create product");
+      toast.error(error.message || `Failed to ${isEditMode ? 'update' : 'create'} product`);
     } finally {
       setLoading(false);
     }
@@ -75,7 +93,7 @@ const ProductManager = () => {
     <div className="container mx-auto p-4 max-w-2xl">
       <div className="bg-white rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">
-          Create New Product
+          {isEditMode ? "Edit Product" : "Create New Product"}
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
@@ -221,10 +239,26 @@ const ProductManager = () => {
                   </button>
                 </div>
               )}
+              {isEditMode && initialProduct?.photo && !product.photo && (
+                <div className="mt-2">
+                  <span className="text-sm text-gray-500">
+                    Current image will be kept
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end space-x-3">
+            {isEditMode && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Cancel
+              </button>
+            )}
             <button
               type="submit"
               disabled={loading}
@@ -252,10 +286,10 @@ const ProductManager = () => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Creating...
+                  {isEditMode ? "Updating..." : "Creating..."}
                 </>
               ) : (
-                "Create Product"
+                isEditMode ? "Update Product" : "Create Product"
               )}
             </button>
           </div>

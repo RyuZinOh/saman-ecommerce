@@ -79,3 +79,34 @@ export const deleteProduct = async (productId, token) => {
     throw new Error(errorMessage);
   }
 };
+
+// Update product
+export const updateProduct = async (productId, productData, token) => {
+  try {
+    const formData = new FormData();
+
+    Object.keys(productData).forEach((key) => {
+      if (key === "photo" && productData[key] instanceof File) {
+        formData.append("photo", productData[key]);
+      } else if (productData[key] !== undefined) {
+        formData.append(key, productData[key]);
+      }
+    });
+
+    const { data } = await axios.put(
+      `${API_BASE_URL}/api/v1/product/update-product/${productId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to update product";
+    throw new Error(errorMessage);
+  }
+};
