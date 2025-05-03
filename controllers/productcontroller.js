@@ -150,20 +150,27 @@ export const updateSki = async (req, res) => {
   try {
     const { fields, files } = req;
     const error = validateProductFields(fields, files?.photo);
-    if (error) return res.status(400).send({ error });
+    if (error) return res.status(400).send({ success: false, message: error });
 
-    const product = await productModel.findByIdAndUpdate(
-      req.params.pidP,
-      { ...fields, slug: slugify(fields.name) },
-      { new: true }
-    );
+    // Update product with new fields and slug
+    let product = await productModel
+      .findByIdAndUpdate(
+        req.params.pidP,
+        {
+          ...fields,
+          slug: slugify(fields.name),
+        },
+        { new: true }
+      )
+      .populate("category"); 
 
-    if (files.photo) {
+    if (files?.photo) {
       product.photo.data = fs.readFileSync(files.photo.path);
       product.photo.contentType = files.photo.type;
     }
 
     await product.save();
+
     res.status(200).send({
       success: true,
       message: "Product updated successfully",
@@ -174,7 +181,7 @@ export const updateSki = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error updating product",
-      error,
+      error: error.message,
     });
   }
 };
