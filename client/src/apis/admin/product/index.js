@@ -110,3 +110,11 @@ export const updateProduct = async (productId, productData, token) => {
     throw new Error(errorMessage);
   }
 };
+
+
+
+
+// Function to get photo 
+export  const getProductPhotoUrl = (productId) => {
+    return `${API_BASE_URL}/api/v1/product/product-photo/${productId}`;
+};
