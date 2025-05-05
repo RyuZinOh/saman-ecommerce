@@ -20,7 +20,7 @@ const NAV_LINKS = [
   { name: "Contact", path: "/contact" },
 ];
 
-const NotificationBar = () => (
+const NotificationBar = memo(() => (
   <div className="bg-indigo-800 text-white text-sm">
     <div className="container mx-auto px-4 py-1 flex justify-between items-center">
       <div className="flex items-center space-x-2">
@@ -30,21 +30,21 @@ const NotificationBar = () => (
       <span className="font-medium">noEvent currently!</span>
     </div>
   </div>
-);
+));
 
-const MobileSearchModal = ({ onClose }) => (
+const MobileSearchModal = memo(({ onClose }) => (
   <div className="fixed inset-0 bg-white z-50 p-4 lg:hidden">
     <div className="flex items-center justify-between mb-4">
       <h2 className="text-xl font-bold">Search</h2>
-      <button onClick={onClose} className="p-2">
+      <button onClick={onClose} className="p-2" aria-label="Close search">
         <X size={24} weight="bold" />
       </button>
     </div>
     <SearchInput variant="default" />
   </div>
-);
+));
 
-const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
+const UserDropdown = memo(({ isOpen, toggleDropdown, user, logout }) => {
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -62,15 +62,18 @@ const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [handleClickOutside]);
 
-  const handleDashboard = () => {
-    navigate(user?.role === 1 ? "/admin-dashboard" : "/dashboard");
-    toggleDropdown(false);
-  };
+  const handleNavigation = useCallback(
+    (path) => {
+      navigate(path);
+      toggleDropdown(false);
+    },
+    [navigate, toggleDropdown]
+  );
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     toggleDropdown(false);
-  };
+  }, [logout, toggleDropdown]);
 
   return (
     <div className="hidden lg:block relative" ref={dropdownRef}>
@@ -79,9 +82,11 @@ const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
           <button
             onClick={() => toggleDropdown(!isOpen)}
             className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600"
+            aria-expanded={isOpen}
+            aria-label="User menu"
           >
             <User size={20} weight="bold" />
-            <span className="text-sm">
+            <span className="text-sm truncate max-w-[120px]">
               {user.name || user.email.split("@")[0]}
             </span>
             <CaretDown
@@ -91,19 +96,23 @@ const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
             />
           </button>
           <div
-            className={`absolute right-0 mt-2 w-40 bg-white rounded border transition-all z-50 ${
-              isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+            className={`absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg transition-all z-50 ${
+              isOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
           >
             <button
-              onClick={handleDashboard}
-              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
+              onClick={() =>
+                handleNavigation(
+                  user.role === 1 ? "/admin-dashboard" : "/dashboard"
+                )
+              }
+              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-50"
             >
               Dashboard
             </button>
             <button
               onClick={handleLogout}
-              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-sm text-left hover:bg-gray-50"
             >
               Logout
             </button>
@@ -119,7 +128,7 @@ const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
           </Link>
           <Link
             to="/register"
-            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
           >
             Register
           </Link>
@@ -127,15 +136,28 @@ const UserDropdown = ({ isOpen, toggleDropdown, user, logout }) => {
       )}
     </div>
   );
-};
+});
 
-const MobileMenu = ({ isOpen, toggleMenu, isAuthenticated, logout }) => {
+const MobileMenu = memo(({ isOpen, toggleMenu, isAuthenticated, logout }) => {
   const navigate = useNavigate();
+
+  const handleNavigation = useCallback(
+    (path) => {
+      navigate(path);
+      toggleMenu();
+    },
+    [navigate, toggleMenu]
+  );
+
+  const handleLogout = useCallback(() => {
+    logout();
+    toggleMenu();
+  }, [logout, toggleMenu]);
 
   if (!isOpen) return null;
 
   return (
-    <nav className="lg:hidden border-t mt-3 py-4">
+    <nav className="lg:hidden border-t mt-3 py-4 animate-fadeIn">
       <div className="flex flex-col space-y-3">
         {NAV_LINKS.map((link) => (
           <NavLink
@@ -143,7 +165,7 @@ const MobileMenu = ({ isOpen, toggleMenu, isAuthenticated, logout }) => {
             to={link.path}
             onClick={toggleMenu}
             className={({ isActive }) =>
-              `text-base py-2 ${
+              `text-base py-2 transition-colors ${
                 isActive
                   ? "text-indigo-600 font-semibold"
                   : "text-gray-700 hover:text-indigo-600"
@@ -157,30 +179,32 @@ const MobileMenu = ({ isOpen, toggleMenu, isAuthenticated, logout }) => {
         {isAuthenticated ? (
           <>
             <button
-              onClick={() => {
-                navigate("/dashboard");
-                toggleMenu();
-              }}
-              className="btn-outline"
+              onClick={() => handleNavigation("/dashboard")}
+              className="text-left py-2 text-gray-700 hover:text-indigo-600"
             >
               Dashboard
             </button>
             <button
-              onClick={() => {
-                logout();
-                toggleMenu();
-              }}
-              className="btn-ghost"
+              onClick={handleLogout}
+              className="text-left py-2 text-gray-700 hover:text-indigo-600"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" onClick={toggleMenu} className="btn-outline">
+            <Link
+              to="/login"
+              onClick={toggleMenu}
+              className="py-2 text-gray-700 hover:text-indigo-600"
+            >
               Login
             </Link>
-            <Link to="/register" onClick={toggleMenu} className="btn-primary">
+            <Link
+              to="/register"
+              onClick={toggleMenu}
+              className="py-2 text-indigo-600 font-medium"
+            >
               Register
             </Link>
           </>
@@ -188,7 +212,7 @@ const MobileMenu = ({ isOpen, toggleMenu, isAuthenticated, logout }) => {
       </div>
     </nav>
   );
-};
+});
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -217,83 +241,93 @@ const Header = () => {
     <>
       <NotificationBar />
       <header className="bg-white sticky top-0 z-50 ">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-indigo-600">
-            SAMAN
-          </Link>
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-between items-center">
+            <Link
+              to="/"
+              className="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
+              SAMAN
+            </Link>
 
-          <nav className="hidden lg:flex space-x-8">
-            {NAV_LINKS.map(({ name, path }) => (
-              <NavLink
-                key={path}
-                to={path}
-                className={({ isActive }) =>
-                  `text-sm font-medium ${
-                    isActive
-                      ? "text-indigo-600 border-b-2 border-indigo-600"
-                      : "text-gray-700 hover:text-indigo-600"
-                  }`
-                }
-                end
+            <nav className="hidden lg:flex space-x-8">
+              {NAV_LINKS.map(({ name, path }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  className={({ isActive }) =>
+                    `text-sm font-medium transition-colors ${
+                      isActive
+                        ? "text-indigo-600 border-b-2 border-indigo-600"
+                        : "text-gray-700 hover:text-indigo-600"
+                    }`
+                  }
+                  end
+                >
+                  {name}
+                </NavLink>
+              ))}
+            </nav>
+
+            <div className="flex items-center space-x-4">
+              {/* Desktop Search */}
+              <div className="hidden lg:block w-[200px]">
+                <SearchInput variant="navbar" />
+              </div>
+
+              {/* Mobile Search */}
+              <button
+                onClick={() => setShowMobileSearch(true)}
+                className="lg:hidden text-gray-700 hover:text-indigo-600 p-2 transition-colors"
+                aria-label="Open search"
               >
-                {name}
-              </NavLink>
-            ))}
-          </nav>
+                <MagnifyingGlass size={20} weight="bold" />
+              </button>
 
-          <div className="flex items-center space-x-4">
-            {/* Desktop Search */}
-            <div className="hidden lg:block">
-              <SearchInput variant="navbar" />
+              {/* Cart */}
+              <button
+                className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
+                aria-label="Shopping cart"
+              >
+                <ShoppingCart size={20} />
+                {isAuthenticated && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 text-xs flex items-center justify-center bg-indigo-600 text-white rounded-full">
+                    3
+                  </span>
+                )}
+              </button>
+
+              {/* User dropdown */}
+              <UserDropdown
+                isOpen={isUserDropdownOpen}
+                toggleDropdown={toggleUserDropdown}
+                user={isAuthenticated ? user : null}
+                logout={logout}
+              />
+
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={toggleMenu}
+                className="lg:hidden p-2 text-gray-700 hover:text-indigo-600 transition-colors"
+                aria-label="Toggle menu"
+              >
+                {isMenuOpen ? (
+                  <X size={20} weight="bold" />
+                ) : (
+                  <List size={20} weight="bold" />
+                )}
+              </button>
             </div>
-
-            {/* Mobile Search */}
-            <button
-              onClick={() => setShowMobileSearch(true)}
-              className="lg:hidden text-gray-700 hover:text-indigo-600 p-2"
-            >
-              <MagnifyingGlass size={20} weight="bold" />
-            </button>
-
-            {/* Cart */}
-            <button className="relative p-2 text-gray-700 hover:text-indigo-600">
-              <ShoppingCart size={20} />
-              {isAuthenticated && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 text-xs flex items-center justify-center bg-indigo-600 text-white rounded-full">
-                  3
-                </span>
-              )}
-            </button>
-
-            {/* User dropdown */}
-            <UserDropdown
-              isOpen={isUserDropdownOpen}
-              toggleDropdown={toggleUserDropdown}
-              user={isAuthenticated ? user : null}
-              logout={logout}
-            />
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={toggleMenu}
-              className="lg:hidden p-2 text-gray-700 hover:text-indigo-600"
-            >
-              {isMenuOpen ? (
-                <X size={20} weight="bold" />
-              ) : (
-                <List size={20} weight="bold" />
-              )}
-            </button>
           </div>
-        </div>
 
-        {/* Mobile Menu */}
-        <MobileMenu
-          isOpen={isMenuOpen}
-          toggleMenu={toggleMenu}
-          isAuthenticated={isAuthenticated}
-          logout={logout}
-        />
+          {/* Mobile Menu */}
+          <MobileMenu
+            isOpen={isMenuOpen}
+            toggleMenu={toggleMenu}
+            isAuthenticated={isAuthenticated}
+            logout={logout}
+          />
+        </div>
       </header>
 
       {/* Mobile Search Modal */}
