@@ -207,6 +207,39 @@ export const pCg = async (req, res) => {
   }
 };
 
+
+//searching product
+export const searchProductController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const results = await productModel
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .select("name slug price category _id")
+      .populate("category");
+
+    res.status(200).send({
+      success: true,
+      message: "Search results found",
+      results,
+    });
+  } catch (error) {
+    console.error("Error in search:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error in search",
+      error,
+    });
+  }
+};
+
+
+
+
 //token
 export const bTC = async (req, res) => {
   try {
@@ -222,6 +255,12 @@ export const bTC = async (req, res) => {
     res.status(500).json({ error: "Failed to generate client token" });
   }
 };
+
+
+
+
+
+
 
 //payment
 export const bTm = async (req, res) => {
