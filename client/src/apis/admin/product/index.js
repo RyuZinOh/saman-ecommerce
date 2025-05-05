@@ -118,3 +118,19 @@ export const updateProduct = async (productId, productData, token) => {
 export  const getProductPhotoUrl = (productId) => {
     return `${API_BASE_URL}/api/v1/product/product-photo/${productId}`;
 };
+
+
+
+// Search products
+export const searchProducts = async (keyword) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/api/v1/product/search/${keyword}`
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to search products";
+    throw new Error(errorMessage);
+  }
+};

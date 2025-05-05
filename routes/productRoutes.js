@@ -10,6 +10,7 @@ import {
   pCg,
   bTC,
   bTm,
+  searchProductController,
 } from "../controllers/productcontroller.js";
 import formidable from "express-formidable";
 const router = express.Router();
@@ -47,6 +48,9 @@ router.put(
 
 //category prodcut
 router.get("/product-category/:slug", pCg);
+
+//searching product
+router.get("/search/:keyword", searchProductController);
 
 //paytment routes
 router.get("/braintree/token", bTC);
