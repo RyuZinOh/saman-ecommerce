@@ -120,20 +120,19 @@ const HomePage = () => {
                 )}
               </div>
             ) : (
-              <div className="columns-2 sm:columns-3 md:columns-4 gap-3 space-y-3">
+              <div className="columns-1 sm:columns-2  md:columns-3 lg:columns-4 gap-3 space-y-1">
                 {filteredProducts.map((product) => (
                   <div
                     key={product._id}
-                    className="break-inside-avoid overflow-hidden relative group rounded-lg border border-blue-500 shadow-sm"
+                    className="break-inside-avoid overflow-hidden relative group border border-blue-500 shadow-sm "
                   >
                     <img
                       src={getProductPhotoUrl(product._id)}
                       alt={product.name}
-                      className="w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                      className="w-full object-cover  transition-transform duration-300 group-hover:scale-169"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src =
-                          "https://via.placeholder.com/300x400?text=No+Image";
+                        e.target.src = "";
                       }}
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2 flex justify-between items-end text-white text-xs">
@@ -149,6 +148,16 @@ const HomePage = () => {
                           {product.category?.name || "—"}
                         </div>
                       </div>
+                    </div>
+
+                    {/* More Details Button */}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Link
+                        to={`/product/${product.slug}`}
+                        className="bg-black/40 text-white px-2 py-1 rounded-full text-xs font-medium hover:bg-black/60 transition-colors"
+                      >
+                        More
+                      </Link>
                     </div>
                   </div>
                 ))}

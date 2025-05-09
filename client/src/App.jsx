@@ -14,6 +14,7 @@ import CategoryManager from "./component/user/admin/CategoryManager";
 import ProductManager from "./component/user/admin/ProductManager";
 import Products from "./component/user/admin/Products";
 import ViewProduct from "./component/user/admin/ViewProduct";
+import PublicProductDetails from "./component/PublicProductDetails";
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/product/:slug" element={<PublicProductDetails />} />
+
 
         {/* Protected User Routes */}
         <Route
