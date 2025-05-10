@@ -120,7 +120,7 @@ const HomePage = () => {
                 )}
               </div>
             ) : (
-              <div className="columns-1 sm:columns-2  md:columns-3 lg:columns-4 gap-3 space-y-1">
+              <div className="columns-1 sm:columns-2  md:columns-3 lg:columns-4 gap-0.5 space-y-0.5">
                 {filteredProducts.map((product) => (
                   <div
                     key={product._id}
