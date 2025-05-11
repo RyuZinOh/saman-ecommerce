@@ -15,6 +15,7 @@ import ProductManager from "./component/user/admin/ProductManager";
 import Products from "./component/user/admin/Products";
 import ViewProduct from "./component/user/admin/ViewProduct";
 import PublicProductDetails from "./component/PublicProductDetails";
+import CategoryProducts from "./component/pages/CategoryProducts";
 
 function App() {
   return (
@@ -25,8 +26,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
         <Route path="/product/:slug" element={<PublicProductDetails />} />
+        <Route path="/category/:slug" element={<CategoryProducts />} />
 
 
         {/* Protected User Routes */}

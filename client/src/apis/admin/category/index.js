@@ -37,6 +37,21 @@ export const getAllCategories = async () => {
   }
 };
 
+
+// Get Category Products
+export const getCategoryProducts = async (slug) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/api/v1/product/product-category/${slug}`
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to fetch category products";
+    throw new Error(errorMessage);
+  }
+};
+
 // Get Single Category
 export const getSingleCategory = async (slug) => {
   try {
