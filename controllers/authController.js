@@ -2,7 +2,6 @@
 import userModel from "../models/userModel.js";
 import { hashPassword, comparePassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
-import orderModel from "../models/orderModel.js";
 export const registerController = async (req, res) => {
   try {
     const { name, email, password, phone, address, fpassA } = req.body;
@@ -214,68 +213,7 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-//getting the orders
-export const getOrderc = async (req, res) => {
-  try {
-    const orders = await orderModel
-      .find({ buyer: req.user._id })
-      .populate("products", "-photo")
-      .populate("buyer", "name");
-
-    res.json(orders);
-  } catch (error) {
-    console.error("Error getting orders:", error);
-    res.status(500).send({
-      success: false,
-      message: "Error occurred getting orders",
-      error: error.message,
-    });
-  }
-};
-
-export const getOrdersA = async (req, res) => {
-  try {
-    const orders = await orderModel
-      .find({})
-      .populate("products", "name price")
-      .populate("buyer", "name email")
-      .sort({ createdAt: -1 });
-
-    res.json({
-      success: true,
-      message: "Orders fetched successfully",
-      orders,
-    });
-  } catch (error) {
-    console.error("Error getting orders:", error);
-    res.status(500).send({
-      success: false,
-      message: "Error occurred getting orders",
-      error: error.message,
-    });
-  }
-};
-
-//updating status
-export const updateStatusC = async (req, res) => {
-  try {
-    const { orderId, status } = req.body;
-    const orders = await orderModel.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    );
-    res.json(orders);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Error updating the order status",
-      error,
-    });
-  }
-};
-
+//admin
 export const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find({}, "-password -fpassA");

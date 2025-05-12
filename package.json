@@ -15,7 +15,6 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "braintree": "^3.26.0",
     "colors": "^1.4.0",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",

@@ -8,8 +8,6 @@ import {
   pdeleter,
   updateSki,
   pCg,
-  bTC,
-  bTm,
   searchProductController,
 } from "../controllers/productcontroller.js";
 import formidable from "express-formidable";
@@ -52,8 +50,4 @@ router.get("/product-category/:slug", pCg);
 //searching product
 router.get("/search/:keyword", searchProductController);
 
-//paytment routes
-router.get("/braintree/token", bTC);
-
-router.post("/braintree/payment", requireSignIn, bTm);
 export default router;
