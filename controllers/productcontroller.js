@@ -2,9 +2,7 @@ import productModel from "../models/productModel.js";
 import fs from "fs";
 import slugify from "slugify";
 import categoryModels from "../models/categoryModels.js";
-import braintree from "braintree";
 import { error } from "console";
-import orderModel from "../models/orderModel.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,14 +17,6 @@ const validateProductFields = (fields, photo) => {
   if (photo && photo.size > 1000000) return "Photo must be less than 1MB";
   return null;
 };
-
-// ..payement gateway
-var gateway = new braintree.BraintreeGateway({
-  environment: braintree.Environment.Sandbox,
-  merchantId: process.env.BRAINTREE_MERCHANT,
-  publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-  privateKey: process.env.BRAINTREE_PRIVATE_KEY,
-});
 
 // Create product controller
 export const createProductController = async (req, res) => {
@@ -240,63 +230,7 @@ export const searchProductController = async (req, res) => {
 
 
 
-//token
-export const bTC = async (req, res) => {
-  try {
-    const tokenResponse = await new Promise((resolve, reject) => {
-      gateway.clientToken.generate({}, (err, response) => {
-        if (err) reject(err);
-        else resolve(response);
-      });
-    });
-    res.json(tokenResponse);
-  } catch (error) {
-    console.error("Error generating client token:", error);
-    res.status(500).json({ error: "Failed to generate client token" });
-  }
-};
 
 
 
 
-
-
-
-//payment
-export const bTm = async (req, res) => {
-  try {
-    const { nonce, cart } = req.body;
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-
-    const transactionResult = await new Promise((resolve, reject) => {
-      gateway.transaction.sale(
-        {
-          amount: total.toFixed(2), // Ensure amount is in a proper format
-          paymentMethodNonce: nonce,
-          options: { submitForSettlement: true },
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-    });
-
-    if (transactionResult.success) {
-      const order = await new orderModel({
-        products: cart,
-        payment: transactionResult,
-        buyer: req.user._id,
-      }).save();
-
-      res.json({ ok: true, order });
-    } else {
-      res
-        .status(500)
-        .json({ error: "Transaction failed", details: transactionResult });
-    }
-  } catch (error) {
-    console.error("Error processing payment:", error);
-    res.status(500).json({ error: "Failed to process payment" });
-  }
-};
