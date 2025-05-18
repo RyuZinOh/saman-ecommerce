@@ -9,6 +9,8 @@ import {
   updateSki,
   pCg,
   searchProductController,
+  createOrder,
+  getUserOrders,
 } from "../controllers/productcontroller.js";
 import formidable from "express-formidable";
 const router = express.Router();
@@ -49,5 +51,20 @@ router.get("/product-category/:slug", pCg);
 
 //searching product
 router.get("/search/:keyword", searchProductController);
+
+//ordering
+router.post(
+  "/create-order",
+  requireSignIn,
+  createOrder
+)
+
+
+router.get(
+  "/user-orders",
+  requireSignIn,
+  isAdmin,
+  getUserOrders,
+);
 
 export default router;
