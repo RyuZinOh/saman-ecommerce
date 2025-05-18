@@ -4,6 +4,8 @@ import slugify from "slugify";
 import categoryModels from "../models/categoryModels.js";
 import { error } from "console";
 import dotenv from "dotenv";
+import orderModel from "../models/orderModel.js";
+import userModel from "../models/userModel.js";
 
 dotenv.config();
 // Validation helper
@@ -234,3 +236,68 @@ export const searchProductController = async (req, res) => {
 
 
 
+//creating order
+export const createOrder = async (req, res) => {
+  try {
+    const { products } = req.body;
+    const buyer = req.user._id;
+
+    const user = await userModel.findById(buyer);
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (!products || !Array.isArray(products) || products.length === 0) {
+      return res.status(400).send({
+        success: false,
+        message: "Products are required",
+      });
+    }
+
+    const order = await new orderModel({
+      products,
+      buyer,
+      shippingAddress: user.address, 
+      phone: user.phone,             
+      status: "Not Processed",
+    }).save();
+
+    res.status(201).send({
+      success: true,
+      message: "Order created successfully",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while creating order",
+      error,
+    });
+  }
+};
+
+export const getUserOrders = async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find({ buyer: req.user._id })
+      .populate("products.product")
+      .populate("buyer", "name email");
+
+    res.status(200).send({
+      success: true,
+      message: "User orders retrieved successfully",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while getting user orders",
+      error,
+    });
+  }
+};
