@@ -301,3 +301,18 @@ export const getUserOrders = async (req, res) => {
     });
   }
 };
+
+//counting the order cart so far
+export const getUserOrderCount = async (req, res) => {
+  try {
+    const count = await orderModel.countDocuments({ buyer: req.user._id });
+    res.status(200).json(count); 
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while getting order count",
+      error,
+    });
+  }
+};

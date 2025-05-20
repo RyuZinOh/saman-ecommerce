@@ -11,6 +11,7 @@ import {
   searchProductController,
   createOrder,
   getUserOrders,
+  getUserOrderCount,
 } from "../controllers/productcontroller.js";
 import formidable from "express-formidable";
 const router = express.Router();
@@ -63,8 +64,15 @@ router.post(
 router.get(
   "/user-orders",
   requireSignIn,
-  isAdmin,
   getUserOrders,
+);
+
+
+// order count
+router.get(
+  "/order-count",
+  requireSignIn,
+  getUserOrderCount
 );
 
 export default router;

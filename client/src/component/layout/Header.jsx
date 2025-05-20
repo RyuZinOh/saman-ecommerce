@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../../manager/contexts/auth/useAuth";
 import SearchInput from "../SeachInput";
 import { getAllCategories } from "../../apis/admin/category";
+import { getUserOrderCount } from "../../apis/admin/product";
 const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Shop", path: "/shop" },
@@ -271,15 +272,33 @@ const Header = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
   const categoriesRef = useRef(null);
+  const [orderCount, setOrderCount] = useState(0);
+  const { user, token, isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    const fetchOrderCount = async () => {
+      if (!isAuthenticated || !token) return;
+
+      console.log("Fetching order count with token:", token);
+
+      try {
+        const result = await getUserOrderCount(token);
+        console.log("Order count result:", result);
+        setOrderCount(typeof result === "number" ? result : result?.count || 0);
+      } catch (err) {
+        console.error("Failed to fetch order count:", err);
+      }
+    };
+
+    fetchOrderCount();
+  }, [isAuthenticated, token]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
         const response = await getAllCategories();
-        // Updated to use 'category' instead of 'categories'
         setCategories(response?.category || []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -419,17 +438,15 @@ const Header = () => {
                 <MagnifyingGlass size={20} weight="bold" />
               </button>
 
-              <button
-                className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
-                aria-label="Shopping cart"
-              >
-                <ShoppingCart size={20} />
-                {isAuthenticated && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 text-xs flex items-center justify-center bg-indigo-600 text-white rounded-full">
-                    3
+              <div className="relative text-gray-700">
+                <ShoppingCart size={20} weight="regular" />{" "}
+                {/* Make icon not bold */}
+                {isAuthenticated && orderCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 text-[10px] flex items-center justify-center bg-indigo-600 text-white rounded-full leading-none">
+                    {orderCount}
                   </span>
                 )}
-              </button>
+              </div>
 
               <UserDropdown
                 isOpen={isUserDropdownOpen}

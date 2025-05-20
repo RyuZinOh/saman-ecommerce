@@ -134,3 +134,24 @@ export const searchProducts = async (keyword) => {
     throw new Error(errorMessage);
   }
 };
+
+
+
+// user's order count
+export const getUserOrderCount = async (token) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/api/v1/product/order-count`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to fetch order count";
+    throw new Error(errorMessage);
+  }
+};
