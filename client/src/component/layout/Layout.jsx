@@ -36,7 +36,7 @@ const Layout = ({
       </Helmet>
 
       <Header />
-      <main className="flex-grow container">{children}</main>
+      <main>{children}</main>
       <Footer />
     </div>
   );

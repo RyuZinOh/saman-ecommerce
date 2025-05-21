@@ -99,7 +99,7 @@ const UserDropdown = memo(({ isOpen, toggleDropdown, user, logout }) => {
           <div
             className={`absolute right-0 mt-2 w-40 bg-white rounded-md border border-gray-100 transition-all z-50 ${
               isOpen
-                ? "opacity-100 visible translate-y-0"
+                ? "opacity-100 visible translate-y-15"
                 : "opacity-0 invisible -translate-y-2"
             }`}
           >
@@ -122,10 +122,10 @@ const UserDropdown = memo(({ isOpen, toggleDropdown, user, logout }) => {
           </div>
         </div>
       ) : (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 ">
           <Link
             to="/login"
-            className="text-sm text-gray-700 hover:text-indigo-600"
+            className="text-sm  px-3 py-1 text-gray-700 hover:text-indigo-600"
           >
             Login
           </Link>

@@ -111,15 +111,10 @@ export const updateProduct = async (productId, productData, token) => {
   }
 };
 
-
-
-
-// Function to get photo 
-export  const getProductPhotoUrl = (productId) => {
-    return `${API_BASE_URL}/api/v1/product/product-photo/${productId}`;
+// Function to get photo
+export const getProductPhotoUrl = (productId) => {
+  return `${API_BASE_URL}/api/v1/product/product-photo/${productId}`;
 };
-
-
 
 // Search products
 export const searchProducts = async (keyword) => {
@@ -134,8 +129,6 @@ export const searchProducts = async (keyword) => {
     throw new Error(errorMessage);
   }
 };
-
-
 
 // user's order count
 export const getUserOrderCount = async (token) => {
@@ -153,5 +146,29 @@ export const getUserOrderCount = async (token) => {
     const errorMessage =
       error.response?.data?.message || "Failed to fetch order count";
     throw new Error(errorMessage);
+  }
+};
+
+// create order
+export const createOrder = async (orderData, token) => {
+  const res = await fetch(`${API_BASE_URL}/api/v1/product/create-order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(orderData),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText || "Failed to place order.");
+  }
+
+  const contentType = res.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await res.json();
+  } else {
+    throw new Error("Invalid server response.");
   }
 };
