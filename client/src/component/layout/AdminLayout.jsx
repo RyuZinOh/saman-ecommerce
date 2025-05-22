@@ -35,7 +35,11 @@ const AdminLayout = ({ ...props }) => {
       label: "Dashboard",
       icon: <House size={20} />,
     },
-    { path: "#", label: "Users", icon: <User size={20} /> },
+    {
+      path: "/admin-dashboard/manage-users",
+      label: "Users",
+      icon: <User size={20} />,
+    },
 
     {
       path: "/admin-dashboard/products",
