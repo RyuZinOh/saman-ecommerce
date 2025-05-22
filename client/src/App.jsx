@@ -16,6 +16,7 @@ import Products from "./component/user/admin/Products";
 import ViewProduct from "./component/user/admin/ViewProduct";
 import PublicProductDetails from "./component/PublicProductDetails";
 import CategoryProducts from "./component/pages/CategoryProducts";
+import UserManager from "./component/user/admin/UserManager";
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
         >
           <Route path="create-category" element={<CategoryManager />} />
           <Route path="create-product" element={<ProductManager />} />
+          <Route path="manage-users" element={<UserManager />} />
+
           <Route path="products" element={<Products />} />
 
           <Route path="product/:slug" element={<ViewProduct />} />
